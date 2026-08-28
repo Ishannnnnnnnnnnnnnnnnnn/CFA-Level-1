@@ -726,7 +726,7 @@
   ];
 
   // --- 2. STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v16';
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v17';
 
   const safeStorage = {
     getItem(key) {
@@ -1086,47 +1086,42 @@
 
         mainContainer.className = 'p-6 sm:p-8 flex-1 tab-content-fade';
 
+        let htmlContent = '';
         switch (this.currentTab) {
           case 'control_room':
           case 'home':
-            mainContainer.innerHTML = this.renderControlRoom();
+            try { htmlContent = this.renderControlRoom(); } catch(e) { console.error('Control room render error:', e); htmlContent = this.renderControlRoom(); }
             break;
 
           case 'curriculum':
-            mainContainer.innerHTML = this.renderCurriculumLES();
+            try { htmlContent = this.renderCurriculumLES(); } catch(e) { console.error('Curriculum render error:', e); }
             break;
 
           case 'practice':
-            mainContainer.innerHTML = this.renderPracticeLab();
+            try { htmlContent = this.renderPracticeLab(); } catch(e) { console.error('Practice render error:', e); }
             break;
 
           case 'weekly_plan':
-            mainContainer.innerHTML = this.renderWeeklyPlanView();
+            try { htmlContent = this.renderWeeklyPlanView(); } catch(e) { console.error('Weekly plan render error:', e); }
             break;
 
           case 'profile':
           case 'resources':
-            mainContainer.innerHTML = this.renderProfileResourcesView();
+            try { htmlContent = this.renderProfileResourcesView(); } catch(e) { console.error('Profile render error:', e); }
             break;
 
           default:
-            mainContainer.innerHTML = this.renderControlRoom();
+            htmlContent = this.renderControlRoom();
+        }
+
+        if (htmlContent) {
+          mainContainer.innerHTML = htmlContent;
         }
 
         this.updateActiveTabStyles();
         this.attachTabEventListeners();
       } catch (err) {
         console.error('Render error caught cleanly:', err);
-        const mainContainer = document.getElementById('app-main-content');
-        if (mainContainer) {
-          mainContainer.innerHTML = `
-            <div class="p-8 bg-white border border-[#E4E7E1] rounded-2xl text-center space-y-4 max-w-md mx-auto my-12 shadow-sm">
-              <div class="text-2xl font-bold font-mono text-[#18181B]">CFA L1 // Braindump</div>
-              <p class="text-xs text-[#71717A]">Application state has been safely recovered.</p>
-              <button onclick="localStorage.clear(); location.reload();" class="btn-primary text-xs w-full py-2.5 flex justify-center">Reset &amp; Reload Fresh State</button>
-            </div>
-          `;
-        }
       }
     }
 
@@ -2368,11 +2363,15 @@
 
   // --- 5. INITIALIZATION ---
   function startApp() {
-    window.app = new App();
+    if (!window.app) {
+      window.app = new App();
+    }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startApp);
+  window.app = new App();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startApp);
   } else {
     startApp();
   }
