@@ -735,7 +735,7 @@
   ];
 
   // --- 2. SAFE STORAGE & STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v21';
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v22';
 
   const safeStorage = {
     getItem(key) {
@@ -760,7 +760,7 @@
       selectedAttemptId: 'nov_2026',
       mockTimeCountsToward300: true,
       coderProfile: {
-        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+        photo: 'assets/ishan_nagpal.jpg',
         name: 'Ishan Nagpal',
         role: 'Architect & Lead System Developer',
         linkedin: 'https://linkedin.com/in/ishannagpal07',
@@ -2055,7 +2055,7 @@
             </div>
 
             <div class="flex items-center gap-4">
-              <img src="${profile.photo}" alt="${profile.name}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Ishan+Nagpal&background=18181B&color=E2EFE7&bold=true';" class="w-16 h-16 rounded-xl object-cover border border-[#E4E7E1] shadow-xs">
+              <img src="${profile.photo}" alt="${profile.name}" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Ishannnnnnnnnnnnnnnnnnn/CFA-Level-1/main/assets/ishan_nagpal.jpg';" class="w-16 h-16 rounded-xl object-cover border border-[#E4E7E1] shadow-xs">
               <div class="space-y-1">
                 <div class="text-base font-bold font-mono text-[#18181B]">${profile.name}</div>
                 <div class="flex flex-wrap gap-2 pt-1">
