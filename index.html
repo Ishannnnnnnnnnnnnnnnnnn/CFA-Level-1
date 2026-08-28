@@ -7,6 +7,9 @@
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase Cloud SDK CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <!-- Custom Styling matching Reference Aesthetic -->
   <style>
@@ -358,7 +361,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
       <!-- Main Content Container -->
       <main id="app-main-content" class="p-6 sm:p-8 flex-1 tab-content-fade">
-        <!-- Dynamic Views rendered by App.render() -->
+        <!-- Live view rendered dynamically by App.render() -->
       </main>
 
       <!-- Clean Footer -->
@@ -393,7 +396,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
     </button>
   </div>
 
-  <!-- Inline App Script Bundle v22 -->
+  <!-- Inline App Script Bundle with Supabase Cloud Integration -->
   <script>
 // =========================================================
 // CFA Level I: Braindump - Standalone App Bundle v21 (FLAWLESS)
@@ -1223,6 +1226,162 @@ body.sidebar-collapsed #btn-expand-sidebar {
     };
   }
 
+
+  // --- 2.5 CLOUD SYNC MANAGER (SUPABASE INTEGRATION) ---
+  class CloudSyncManager {
+    constructor() {
+      this.client = null;
+      this.syncDebounceTimer = null;
+      this.status = 'local'; // 'local', 'connected', 'syncing', 'synced', 'error'
+      this.lastSyncTime = null;
+      this.errorMessage = null;
+      this.init();
+    }
+
+    getConfig() {
+      return {
+        url: safeStorage.getItem('cfa_supabase_url') || '',
+        anonKey: safeStorage.getItem('cfa_supabase_key') || '',
+        syncId: safeStorage.getItem('cfa_supabase_sync_id') || 'ishan_cfa_l1'
+      };
+    }
+
+    saveConfig(url, anonKey, syncId) {
+      safeStorage.setItem('cfa_supabase_url', (url || '').trim());
+      safeStorage.setItem('cfa_supabase_key', (anonKey || '').trim());
+      safeStorage.setItem('cfa_supabase_sync_id', (syncId || 'ishan_cfa_l1').trim());
+      this.init();
+    }
+
+    init() {
+      const config = this.getConfig();
+      if (config.url && config.anonKey) {
+        try {
+          if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {
+            this.client = window.supabase.createClient(config.url, config.anonKey);
+            this.status = 'connected';
+            this.subscribeRealtime();
+          } else {
+            this.status = 'connected';
+          }
+        } catch (e) {
+          console.warn('Supabase init error:', e);
+          this.status = 'error';
+          this.errorMessage = e.message;
+        }
+      } else {
+        this.client = null;
+        this.status = 'local';
+      }
+    }
+
+    subscribeRealtime() {
+      if (!this.client) return;
+      try {
+        const config = this.getConfig();
+        this.client
+          .channel('public:user_study_state')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'user_study_state', filter: `id=eq.${config.syncId}` }, payload => {
+            if (payload.new && payload.new.state_data) {
+              console.log('Realtime sync payload received from Supabase!');
+              store.applyCloudState(payload.new.state_data);
+            }
+          })
+          .subscribe();
+      } catch (e) {
+        console.warn('Realtime subscription warning:', e);
+      }
+    }
+
+    queueCloudSync(state) {
+      const config = this.getConfig();
+      if (!config.url || !config.anonKey) return;
+
+      if (this.syncDebounceTimer) clearTimeout(this.syncDebounceTimer);
+      this.status = 'syncing';
+
+      this.syncDebounceTimer = setTimeout(() => {
+        this.syncToCloud(state);
+      }, 1000);
+    }
+
+    async syncToCloud(state) {
+      const config = this.getConfig();
+      if (!config.url || !config.anonKey) return;
+
+      try {
+        this.status = 'syncing';
+        store.notify();
+
+        if (!this.client && typeof window !== 'undefined' && window.supabase) {
+          this.client = window.supabase.createClient(config.url, config.anonKey);
+        }
+
+        if (this.client) {
+          const { error } = await this.client
+            .from('user_study_state')
+            .upsert({
+              id: config.syncId,
+              updated_at: new Date().toISOString(),
+              state_data: state
+            });
+
+          if (error) throw error;
+          this.status = 'synced';
+          this.lastSyncTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          this.errorMessage = null;
+        }
+      } catch (e) {
+        console.error('Supabase cloud sync failed:', e);
+        this.status = 'error';
+        this.errorMessage = e.message || 'Sync failed';
+      } finally {
+        store.notify();
+      }
+    }
+
+    async fetchFromCloud() {
+      const config = this.getConfig();
+      if (!config.url || !config.anonKey) return;
+
+      try {
+        this.status = 'syncing';
+        store.notify();
+
+        if (!this.client && typeof window !== 'undefined' && window.supabase) {
+          this.client = window.supabase.createClient(config.url, config.anonKey);
+        }
+
+        if (this.client) {
+          const { data, error } = await this.client
+            .from('user_study_state')
+            .select('state_data, updated_at')
+            .eq('id', config.syncId)
+            .single();
+
+          if (error && error.code !== 'PGRST116') throw error;
+
+          if (data && data.state_data) {
+            store.applyCloudState(data.state_data);
+            this.status = 'synced';
+            this.lastSyncTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else {
+            // First time sync, upload current local state to cloud
+            await this.syncToCloud(store.state);
+          }
+        }
+      } catch (e) {
+        console.error('Supabase fetch error:', e);
+        this.status = 'error';
+        this.errorMessage = e.message;
+      } finally {
+        store.notify();
+      }
+    }
+  }
+
+  const cloudSyncManager = new CloudSyncManager();
+
   class Store {
     constructor() {
       this.state = this.load();
@@ -1262,8 +1421,34 @@ body.sidebar-collapsed #btn-expand-sidebar {
       try {
         safeStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
         this.notify();
+        cloudSyncManager.queueCloudSync(this.state);
       } catch (e) {
         console.error('Failed to save store:', e);
+      }
+    }
+
+    applyCloudState(cloudState) {
+      if (!cloudState || typeof cloudState !== 'object') return;
+      try {
+        this.state = {
+          ...this.state,
+          ...cloudState,
+          coderProfile: { ...this.state.coderProfile, ...(cloudState.coderProfile || {}) },
+          weeklyPlan: {
+            generatedDate: (cloudState.weeklyPlan && cloudState.weeklyPlan.generatedDate) || this.state.weeklyPlan.generatedDate,
+            targetHoursThisWeek: (cloudState.weeklyPlan && cloudState.weeklyPlan.targetHoursThisWeek) || this.state.weeklyPlan.targetHoursThisWeek,
+            items: (cloudState.weeklyPlan && Array.isArray(cloudState.weeklyPlan.items)) ? cloudState.weeklyPlan.items : this.state.weeklyPlan.items
+          },
+          flashcards: Array.isArray(cloudState.flashcards) ? cloudState.flashcards : this.state.flashcards,
+          mistakes: Array.isArray(cloudState.mistakes) ? cloudState.mistakes : this.state.mistakes,
+          mocks: Array.isArray(cloudState.mocks) ? cloudState.mocks : this.state.mocks,
+          studySessions: Array.isArray(cloudState.studySessions) ? cloudState.studySessions : this.state.studySessions,
+          lessonTracking: cloudState.lessonTracking || this.state.lessonTracking
+        };
+        safeStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        this.notify();
+      } catch (e) {
+        console.warn('Error applying cloud state:', e);
       }
     }
 
@@ -2404,16 +2589,69 @@ body.sidebar-collapsed #btn-expand-sidebar {
     renderProfileResourcesView() {
       const profile = store.state.coderProfile || {};
       const resources = store.state.resources || [];
+      const cloudCfg = cloudSyncManager.getConfig();
+      const isConnected = !!(cloudCfg.url && cloudCfg.anonKey);
+      const syncStatus = cloudSyncManager.status;
+
+      let statusBadge = `<span class="badge-mono badge-gray text-xs">🟡 Local Mode</span>`;
+      if (syncStatus === 'synced') {
+        statusBadge = `<span class="badge-mono badge-sage text-xs">🟢 Synced (${cloudSyncManager.lastSyncTime || 'Just now'})</span>`;
+      } else if (syncStatus === 'syncing') {
+        statusBadge = `<span class="badge-mono badge-amber text-xs animate-pulse">⏳ Syncing...</span>`;
+      } else if (syncStatus === 'error') {
+        statusBadge = `<span class="badge-mono badge-rose text-xs">🔴 ${cloudSyncManager.errorMessage || 'Sync Error'}</span>`;
+      } else if (isConnected) {
+        statusBadge = `<span class="badge-mono badge-sage text-xs">🟢 Connected</span>`;
+      }
 
       return `
         <div class="max-w-7xl mx-auto space-y-6 pb-12">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-5">
             <div>
               <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#18181B]">Resources &amp; Profile Hub</h1>
-              <p class="text-sm text-[#71717A] mt-0.5">Primary study links, prep resources &amp; JSON data backup.</p>
+              <p class="text-sm text-[#71717A] mt-0.5">Primary study links, cloud backend sync &amp; JSON data backup.</p>
             </div>
             <div class="flex items-center gap-3">
+              <button id="btn-sync-cloud-now" class="btn-secondary text-xs flex items-center gap-1.5">
+                <span>⚡</span> Sync Cloud
+              </button>
               <button id="btn-export-backup" class="btn-primary text-xs">Export JSON Backup</button>
+            </div>
+          </div>
+
+          <!-- SUPABASE CLOUD BACKEND SYNC CARD -->
+          <div class="terminal-card p-6 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E4E7E1] pb-3">
+              <div>
+                <div class="text-[10px] font-mono font-bold uppercase text-[#71717A]">BACKEND ARCHITECTURE</div>
+                <h3 class="text-lg font-bold text-[#18181B] flex items-center gap-2">
+                  <span>Supabase Cloud Database Sync</span>
+                  ${statusBadge}
+                </h3>
+              </div>
+              <button id="btn-open-supabase-modal" class="btn-secondary text-xs font-mono font-semibold">
+                ⚙ ${isConnected ? 'Configure Cloud Settings' : 'Connect Supabase Cloud'}
+              </button>
+            </div>
+
+            <div class="text-xs text-[#71717A] leading-relaxed space-y-2">
+              <p>
+                Your study OS uses a <strong>dual-layer persistence engine</strong>: instant 0ms local storage cache + automatic background sync to your personal Supabase Postgres database.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 font-mono text-[11px]">
+                <div class="p-3 bg-[#F7F9F6] border border-[#E4E7E1] rounded-lg">
+                  <div class="text-[#A1A1AA] uppercase">Cloud URL</div>
+                  <div class="font-bold text-[#18181B] truncate mt-0.5">${cloudCfg.url ? cloudCfg.url.replace(/^https?:\/\//, '') : 'Not Configured (Local Mode)'}</div>
+                </div>
+                <div class="p-3 bg-[#F7F9F6] border border-[#E4E7E1] rounded-lg">
+                  <div class="text-[#A1A1AA] uppercase">Sync Channel ID</div>
+                  <div class="font-bold text-[#18181B] mt-0.5">${cloudCfg.syncId || 'ishan_cfa_l1'}</div>
+                </div>
+                <div class="p-3 bg-[#F7F9F6] border border-[#E4E7E1] rounded-lg">
+                  <div class="text-[#A1A1AA] uppercase">Cross-Device Realtime</div>
+                  <div class="font-bold text-[#2E6F40] mt-0.5">${isConnected ? 'Active (PostgreSQL Listen)' : 'Local Storage Cache'}</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -2439,7 +2677,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
             </div>
           </div>
 
-          <!-- BUILT BY ISHAN NAGPAL CARD (MINIMAL & ZERO FLUFF) -->
+          <!-- BUILT BY ISHAN NAGPAL CARD -->
           <div class="terminal-card p-6 space-y-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-4">
               <div>
@@ -2456,7 +2694,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
               <div class="space-y-1">
                 <div class="text-base font-bold font-mono text-[#18181B]">${profile.name}</div>
                 <div class="flex flex-wrap gap-2 pt-1">
-                  <span class="badge-mono badge-sage">HTML5 / Vanilla JS ES6</span>
+                  <span class="badge-mono badge-sage">Supabase Cloud + PostgreSQL</span>
                   <span class="badge-mono badge-gray">Apple SF Pro Engine</span>
                   <span class="badge-mono badge-sage">Let Me Explain 2026/2027</span>
                 </div>
@@ -2566,6 +2804,12 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
       document.getElementById('btn-edit-coder')?.addEventListener('click', () => this.openEditCoderModal());
       document.getElementById('btn-export-backup')?.addEventListener('click', () => this.exportBackup());
+      document.getElementById('btn-open-supabase-modal')?.addEventListener('click', () => this.openSupabaseModal());
+      document.getElementById('btn-sync-cloud-now')?.addEventListener('click', async () => {
+        await cloudSyncManager.fetchFromCloud();
+        await cloudSyncManager.syncToCloud(store.state);
+        this.render();
+      });
     }
 
     exportBackup() {
@@ -3107,6 +3351,73 @@ body.sidebar-collapsed #btn-expand-sidebar {
             </div>
           `).join('');
         }
+      });
+    }
+
+    openSupabaseModal() {
+      const cfg = cloudSyncManager.getConfig();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <div>
+                <h3 class="font-bold text-sm text-[#18181B]">Connect Supabase Cloud Database</h3>
+                <p class="text-[11px] text-[#71717A]">Sync your study progress across multiple devices in real-time.</p>
+              </div>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Supabase Project URL</label>
+                <input id="sb-url" type="text" value="${cfg.url || ''}" placeholder="https://yourprojectid.supabase.co" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono text-[11px]">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Supabase Public Anon Key</label>
+                <input id="sb-key" type="password" value="${cfg.anonKey || ''}" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono text-[11px]">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Sync Profile ID</label>
+                <input id="sb-id" type="text" value="${cfg.syncId || 'ishan_cfa_l1'}" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono text-[11px]">
+              </div>
+
+              <!-- 1-Click SQL Setup -->
+              <div class="p-3 bg-[#F7F9F6] border border-[#E4E7E1] rounded-lg space-y-2">
+                <div class="flex justify-between items-center text-[10px] font-mono font-bold text-[#71717A]">
+                  <span>SUPABASE SQL SETUP (RUN ONCE IN SUPABASE SQL EDITOR)</span>
+                </div>
+                <pre class="bg-[#18181B] text-[#E2EFE7] p-2.5 rounded text-[10px] font-mono overflow-x-auto select-all leading-tight">create table if not exists user_study_state (
+  id text primary key default 'ishan_cfa_l1',
+  updated_at timestamp with time zone default timezone('utc'::text, now()),
+  state_data jsonb not null
+);
+alter table user_study_state enable row level security;
+create policy "Allow all public access" on user_study_state for all using (true);</pre>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
+              <button id="btn-save-supabase-config" class="btn-primary">Save &amp; Sync Now</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      document.getElementById('btn-save-supabase-config')?.addEventListener('click', async () => {
+        const url = document.getElementById('sb-url').value;
+        const key = document.getElementById('sb-key').value;
+        const syncId = document.getElementById('sb-id').value;
+
+        cloudSyncManager.saveConfig(url, key, syncId);
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
+
+        await cloudSyncManager.syncToCloud(store.state);
+        this.render();
       });
     }
   }
