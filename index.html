@@ -284,7 +284,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
             <div class="font-extrabold text-base tracking-tight font-mono text-[#18181B]">CFA L1 // BRAINDUMP</div>
             <div class="text-[11px] font-mono font-semibold text-[#A1A1AA] uppercase tracking-wider">PERSONAL STUDY OS</div>
           </div>
-          <button id="btn-toggle-sidebar" class="p-2 hover:bg-[#EEF2EC] text-[#71717A] hover:text-[#18181B] rounded-lg transition-colors font-mono text-sm font-bold flex-shrink-0" title="Toggle Taskbar">
+          <button id="btn-toggle-sidebar" class="p-2 hover:bg-[#EEF2EC] text-[#71717A] hover:text-[#18181B] rounded-lg transition-colors font-mono text-sm font-bold flex-shrink-0" title="Toggle Taskbar" onclick="window.app &amp;&amp; window.app.toggleSidebarCollapse()">
             «
           </button>
         </div>
@@ -358,7 +358,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
       <!-- Main Content Container -->
       <main id="app-main-content" class="p-6 sm:p-8 flex-1 tab-content-fade">
-        <!-- Live view rendered dynamically by App.render() -->
+        <!-- Dynamic Views rendered by App.render() -->
       </main>
 
       <!-- Clean Footer -->
@@ -372,7 +372,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
   <!-- Mobile Bottom Bar -->
   <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E4E7E1] flex justify-around py-2 z-40 font-mono text-[10px] font-bold text-[#71717A]">
     <button class="flex flex-col items-center py-1" data-tab="control_room" onclick="window.app &amp;&amp; window.app.switchTab('control_room')">
-      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 001 1m-6 0h6"></path></svg>
       <span>Home</span>
     </button>
     <button class="flex flex-col items-center py-1" data-tab="curriculum" onclick="window.app &amp;&amp; window.app.switchTab('curriculum')">
@@ -393,7 +393,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
     </button>
   </div>
 
-  <!-- Inline App Script Bundle v21 -->
+  <!-- Inline App Script Bundle v22 -->
   <script>
 // =========================================================
 // CFA Level I: Braindump - Standalone App Bundle v21 (FLAWLESS)
@@ -1132,7 +1132,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
   ];
 
   // --- 2. SAFE STORAGE & STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v21';
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v22';
 
   const safeStorage = {
     getItem(key) {
@@ -1157,7 +1157,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
       selectedAttemptId: 'nov_2026',
       mockTimeCountsToward300: true,
       coderProfile: {
-        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+        photo: 'assets/ishan_nagpal.jpg',
         name: 'Ishan Nagpal',
         role: 'Architect & Lead System Developer',
         linkedin: 'https://linkedin.com/in/ishannagpal07',
@@ -2452,7 +2452,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
             </div>
 
             <div class="flex items-center gap-4">
-              <img src="${profile.photo}" alt="${profile.name}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Ishan+Nagpal&background=18181B&color=E2EFE7&bold=true';" class="w-16 h-16 rounded-xl object-cover border border-[#E4E7E1] shadow-xs">
+              <img src="${profile.photo}" alt="${profile.name}" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Ishannnnnnnnnnnnnnnnnnn/CFA-Level-1/main/assets/ishan_nagpal.jpg';" class="w-16 h-16 rounded-xl object-cover border border-[#E4E7E1] shadow-xs">
               <div class="space-y-1">
                 <div class="text-base font-bold font-mono text-[#18181B]">${profile.name}</div>
                 <div class="flex flex-wrap gap-2 pt-1">
