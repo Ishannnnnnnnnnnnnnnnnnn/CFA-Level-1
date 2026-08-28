@@ -9,7 +9,265 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Custom Styling matching Reference Aesthetic -->
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+/* CFA L1: Braindump - Match Screenshot Off-White & Sage Green Aesthetic */
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", system-ui, sans-serif;
+  --font-mono: "SF Mono", "SFPro-Regular", Menlo, Monaco, Consolas, monospace;
+  
+  --bg-primary: #F7F9F6;     /* Soft warm off-white / sage background from screenshot */
+  --bg-card: #FFFFFF;        /* Pure white cards */
+  --bg-sage-active: #E2EFE7; /* Light sage green active pill */
+  --text-sage-active: #1C3E2C; /* Dark sage green text */
+  --border-color: #E4E7E1;   /* Soft border */
+  --border-hover: #CBD2C8;
+  --text-main: #18181B;      /* Dark charcoal text */
+  --text-muted: #71717A;     /* Muted text */
+  --accent-green: #2E6F40;   /* Muted green accent */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+body, button, input, select, textarea {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--font-mono) !important;
+}
+
+/* Collapsed Sidebar (Taskbar) Styles */
+body.sidebar-collapsed #main-sidebar {
+  width: 4.5rem !important; /* 72px icon strip */
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+body.sidebar-collapsed #main-sidebar .sidebar-text,
+body.sidebar-collapsed #main-sidebar .sidebar-brand-text {
+  display: none !important;
+}
+
+body.sidebar-collapsed #main-sidebar .sidebar-nav-btn {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+body.sidebar-collapsed #main-sidebar #btn-sidebar-start-study {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-radius: 9999px !important;
+}
+
+body.sidebar-collapsed #main-content-wrapper {
+  padding-left: 4.5rem !important;
+}
+
+body.sidebar-collapsed #btn-expand-sidebar {
+  display: inline-flex !important;
+}
+
+/* Smooth Tab Transitions */
+.tab-content-fade {
+  animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.terminal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.terminal-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Sidebar Nav Item Styling matching Screenshot */
+.sidebar-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #52525B;
+  border-radius: 10px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+}
+
+.sidebar-nav-btn .sidebar-icon {
+  transition: color 0.15s ease, transform 0.15s ease;
+  color: #71717A;
+}
+
+.sidebar-nav-btn:hover {
+  color: #18181B;
+  background-color: #EEF2EC;
+}
+
+.sidebar-nav-btn:hover .sidebar-icon {
+  color: #18181B;
+  transform: scale(1.05);
+}
+
+.sidebar-nav-btn.active {
+  color: #1C3E2C;
+  font-weight: 700;
+  background-color: #E2EFE7;
+  border-color: #CBD2C8;
+}
+
+.sidebar-nav-btn.active .sidebar-icon {
+  color: #2E6F40;
+}
+
+/* Practice Filter Pills */
+.practice-filter-pill {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+/* Buttons matching Screenshot */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #18181B;
+  color: #FFFFFF;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid #18181B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+  background-color: #27272A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #FFFFFF;
+  color: #18181B;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary:hover {
+  background-color: #F4F6F2;
+  border-color: #CBD2C8;
+  transform: translateY(-1px);
+}
+
+/* Badges */
+.badge-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-sage {
+  background-color: #E2EFE7;
+  color: #1C3E2C;
+  border: 1px solid #C5DFD0;
+}
+
+.badge-gray {
+  background-color: #F4F4F5;
+  color: #52525B;
+  border: 1px solid #E4E4E7;
+}
+
+.badge-rose {
+  background-color: #FFE4E6;
+  color: #9F1239;
+  border: 1px solid #FECDD3;
+}
+
+/* Progress bar matching Screenshot */
+.progress-bar-track {
+  height: 6px;
+  background-color: #E4E7E1;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #2E6F40;
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pulse animation */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10B981;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Modal styling */
+.modal-overlay {
+  background-color: rgba(24, 24, 27, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease-out;
+}
+
+</style>
 </head>
 <body class="bg-[#F7F9F6] text-[#18181B] min-h-screen antialiased selection:bg-[#E2EFE7] selection:text-[#1C3E2C]">
 
@@ -136,6 +394,2387 @@
   </div>
 
   <!-- Standalone App Script -->
-  <script src="js/app.js"></script>
+  <script>
+// ==========================================
+// CFA Level I: Braindump Standalone App Bundle v12
+// 100% Complete & Pristine Execution
+// ==========================================
+
+(function() {
+  'use strict';
+
+  // --- 1. SEED DATA ---
+  const EXAM_ATTEMPTS = [
+    {
+      id: 'nov_2026',
+      name: 'November 2026',
+      curriculumYear: 2026,
+      examDate: '2026-11-19',
+      prepStartDate: '2026-06-01',
+      targetHours: 300,
+      active: true,
+      eligibilityNotes: 'Standard 2026 exam window. Ensure registration is completed on CFA Institute portal at least 3 months prior.'
+    },
+    {
+      id: 'feb_2027',
+      name: 'February 2027',
+      curriculumYear: 2027,
+      examDate: '2027-02-15',
+      prepStartDate: '2026-09-01',
+      targetHours: 300,
+      active: false,
+      eligibilityNotes: 'First exam window of the 2027 curriculum year. Minimum 6-month gap required if re-sitting from Level I.'
+    },
+    {
+      id: 'may_2027',
+      name: 'May 2027',
+      curriculumYear: 2027,
+      examDate: '2027-05-18',
+      prepStartDate: '2026-11-15',
+      targetHours: 300,
+      active: false,
+      eligibilityNotes: 'Mid-year 2027 exam window. Uses 2027 CFA Level I curriculum.'
+    },
+    {
+      id: 'aug_2027',
+      name: 'August 2027',
+      curriculumYear: 2027,
+      examDate: '2027-08-23',
+      prepStartDate: '2027-02-01',
+      targetHours: 300,
+      active: false,
+      eligibilityNotes: 'Late 2027 exam window. Requires active undergraduate final year status or degree equivalent.'
+    }
+  ];
+
+  const TOPIC_WEIGHTS = {
+    'Ethics and Professional Standards': 17,
+    'Financial Statement Analysis': 13,
+    'Fixed Income': 12,
+    'Equity Investments': 11,
+    'Quantitative Methods': 8,
+    'Economics': 8,
+    'Portfolio Management': 8,
+    'Corporate Issuers': 8,
+    'Derivatives': 8,
+    'Alternative Investments': 7
+  };
+
+  const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  const CURRICULUM_2026 = {
+    curriculumYear: 2026,
+    source: 'Let Me Explain',
+    sourceUrl: 'https://letmeexplain.eu/learning-library/2026/level-1?page_id=6481',
+    topics: [
+      {
+        id: 'quant_2026',
+        name: 'Quantitative Methods',
+        weight: 8,
+        modules: [
+          {
+            id: 'quant_2026_m0',
+            name: 'Prerequisites (TI BA II Plus setup and Time Value of Money)',
+            lessons: [
+              { id: 'q26_l0_1', name: 'Formatting the Texas Instruments BA II Plus calculator for the CFA exam', sourceDurationMinutes: 10, sourceAccess: 'Free' },
+              { id: 'q26_l0_2', name: 'Time Value of Money (TVM) - computing Future Value', sourceDurationMinutes: 13, sourceAccess: 'Free' },
+              { id: 'q26_l0_3', name: 'Time Value of Money (TVM) - computing Present Value', sourceDurationMinutes: 8, sourceAccess: 'Free' },
+              { id: 'q26_l0_4', name: 'Time Value of Money (TVM) - computing the number of periods', sourceDurationMinutes: 3, sourceAccess: 'Free' },
+              { id: 'q26_l0_5', name: 'Time Value of Money (TVM) – computing the rate of interest', sourceDurationMinutes: 6, sourceAccess: 'Free' },
+              { id: 'q26_l0_6', name: 'Time Value of Money (TVM) - annuities', sourceDurationMinutes: 13, sourceAccess: 'Free' },
+              { id: 'q26_l0_7', name: 'Time Value of Money (TVM) - perpetuities', sourceDurationMinutes: 4, sourceAccess: 'Free' },
+              { id: 'q26_l0_8', name: 'Time Value of Money (TVM) - unequal cash flows using CF worksheet', sourceDurationMinutes: 11, sourceAccess: 'Free' },
+              { id: 'q26_l0_9', name: 'Time Value of Money (TVM) - computing PMT', sourceDurationMinutes: 4, sourceAccess: 'Free' },
+              { id: 'q26_l0_10', name: 'Time Value of Money (TVM) - solving complex TVM problems', sourceDurationMinutes: 6, sourceAccess: 'Free' }
+            ]
+          },
+          {
+            id: 'quant_2026_m1',
+            name: 'Learning Module 1. Rates and Returns',
+            lessons: [
+              { id: 'q26_l1_1', name: 'Determinants of interest rates', sourceDurationMinutes: 29, sourceAccess: 'Pro' },
+              { id: 'q26_l1_2', name: 'Rates of return – holding period return, arithmetic and geometric mean', sourceDurationMinutes: 28, sourceAccess: 'Pro' },
+              { id: 'q26_l1_3', name: 'Dealing with extreme values - harmonic, trimmed and windsorized means', sourceDurationMinutes: 18, sourceAccess: 'Pro' },
+              { id: 'q26_l1_4', name: 'Special return measures', sourceDurationMinutes: 17, sourceAccess: 'Pro' },
+              { id: 'q26_l1_5', name: 'MWR and TWR money-weighted and time-weighted rates of return', sourceDurationMinutes: 46, sourceAccess: 'Pro' },
+              { id: 'q26_l1_6', name: 'Annualized returns', sourceDurationMinutes: 21, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m2',
+            name: 'Learning Module 2. The Time Value of Money in Finance',
+            lessons: [
+              { id: 'q26_l2_1', name: 'The time value of money in cash flow streams', sourceDurationMinutes: 22, sourceAccess: 'Pro' },
+              { id: 'q26_l2_2', name: 'Valuing cash flows with TVM functions', sourceDurationMinutes: 19, sourceAccess: 'Pro' },
+              { id: 'q26_l2_3', name: 'Compounding frequencies and continuous compounding', sourceDurationMinutes: 25, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m3',
+            name: 'Learning Module 3. Statistical Measures of Asset Returns',
+            lessons: [
+              { id: 'q26_l3_1', name: 'Properties of the arithmetic mean', sourceDurationMinutes: 11, sourceAccess: 'Pro' },
+              { id: 'q26_l3_2', name: 'Mode and median', sourceDurationMinutes: 5, sourceAccess: 'Pro' },
+              { id: 'q26_l3_3', name: 'Dealing with outliers', sourceDurationMinutes: 10, sourceAccess: 'Pro' },
+              { id: 'q26_l3_4', name: 'Quartiles and quintiles', sourceDurationMinutes: 7, sourceAccess: 'Pro' },
+              { id: 'q26_l3_5', name: 'Deciles and percentiles', sourceDurationMinutes: 3, sourceAccess: 'Pro' },
+              { id: 'q26_l3_6', name: 'Measures of location continued', sourceDurationMinutes: 13, sourceAccess: 'Pro' },
+              { id: 'q26_l3_7', name: 'Range and Mean Absolute Deviation – MAD', sourceDurationMinutes: 11, sourceAccess: 'Pro' },
+              { id: 'q26_l3_8', name: 'Sample variance and sample standard deviation', sourceDurationMinutes: 18, sourceAccess: 'Pro' },
+              { id: 'q26_l3_9', name: 'Downside deviation and coefficient of variation – CV', sourceDurationMinutes: 14, sourceAccess: 'Pro' },
+              { id: 'q26_l3_10', name: 'Skewness', sourceDurationMinutes: 7, sourceAccess: 'Pro' },
+              { id: 'q26_l3_11', name: 'Kurtosis', sourceDurationMinutes: 7, sourceAccess: 'Pro' },
+              { id: 'q26_l3_12', name: 'Correlation', sourceDurationMinutes: 37, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m4',
+            name: 'Learning Module 4. Probability Trees and Conditional Expectations',
+            lessons: [
+              { id: 'q26_l4_1', name: 'Expected value and variance', sourceDurationMinutes: 12, sourceAccess: 'Pro' },
+              { id: 'q26_l4_2', name: 'Probability trees and conditional expectations', sourceDurationMinutes: 20, sourceAccess: 'Pro' },
+              { id: 'q26_l4_3', name: 'Bayes’ formula', sourceDurationMinutes: 21, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m5',
+            name: 'Learning Module 5. Portfolio Mathematics',
+            lessons: [
+              { id: 'q26_l5_1', name: 'Expected portfolio return', sourceDurationMinutes: 7, sourceAccess: 'Pro' },
+              { id: 'q26_l5_2', name: 'Standard deviation and variance of expected returns', sourceDurationMinutes: 10, sourceAccess: 'Pro' },
+              { id: 'q26_l5_3', name: 'Covariance and correlation from a joint probability function', sourceDurationMinutes: 13, sourceAccess: 'Pro' },
+              { id: 'q26_l5_4', name: 'Portfolio variance for a two-asset portfolio', sourceDurationMinutes: 4, sourceAccess: 'Pro' },
+              { id: 'q26_l5_5', name: 'Portfolio risk measures', sourceDurationMinutes: 12, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m6',
+            name: 'Learning Module 6. Simulation Methods',
+            lessons: [
+              { id: 'q26_l6_1', name: 'Lognormal distribution and continuous compounding', sourceDurationMinutes: 25, sourceAccess: 'Pro' },
+              { id: 'q26_l6_2', name: 'Monte Carlo simulation and bootstrapping', sourceDurationMinutes: 12, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m7',
+            name: 'Learning Module 7. Estimation and Inference',
+            lessons: [
+              { id: 'q26_l7_1', name: 'Sampling methods', sourceDurationMinutes: 57, sourceAccess: 'Pro' },
+              { id: 'q26_l7_2', name: 'Central limit theorem and bootstrapping', sourceDurationMinutes: 37, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m8',
+            name: 'Learning Module 8. Hypothesis Testing',
+            lessons: [
+              { id: 'q26_l8_1', name: 'Hypothesis testing overview', sourceDurationMinutes: 50, sourceAccess: 'Pro' },
+              { id: 'q26_l8_2', name: 'Tests of a single mean', sourceDurationMinutes: 14, sourceAccess: 'Pro' },
+              { id: 'q26_l8_3', name: 'Tests of the difference in means', sourceDurationMinutes: 20, sourceAccess: 'Pro' },
+              { id: 'q26_l8_4', name: 'Tests of the mean of differences', sourceDurationMinutes: 14, sourceAccess: 'Pro' },
+              { id: 'q26_l8_5', name: 'Tests of a single variance', sourceDurationMinutes: 19, sourceAccess: 'Pro' },
+              { id: 'q26_l8_6', name: 'Tests of the equality of two variances', sourceDurationMinutes: 17, sourceAccess: 'Pro' },
+              { id: 'q26_l8_7', name: 'Parametric versus nonparametric tests', sourceDurationMinutes: 8, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m9',
+            name: 'Learning Module 9. Parametric and Non-Parametric Tests of Independence',
+            lessons: [
+              { id: 'q26_l9_1', name: 'Parametric tests of a correlation', sourceDurationMinutes: 11, sourceAccess: 'Pro' },
+              { id: 'q26_l9_2', name: 'Non-parametric tests of a correlation', sourceDurationMinutes: 8, sourceAccess: 'Pro' },
+              { id: 'q26_l9_3', name: 'Tests of independence using contingency table data', sourceDurationMinutes: 35, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m10',
+            name: 'Learning Module 10. Simple Linear Regression',
+            lessons: [
+              { id: 'q26_l10_1', name: 'Linear regression basics', sourceDurationMinutes: 18, sourceAccess: 'Pro' },
+              { id: 'q26_l10_2', name: 'Estimating the parameters of a simple linear regression', sourceDurationMinutes: 41, sourceAccess: 'Pro' },
+              { id: 'q26_l10_3', name: 'Assumptions of the simple linear regression model', sourceDurationMinutes: 12, sourceAccess: 'Pro' },
+              { id: 'q26_l10_4', name: 'Analysis of variance and measures of goodness of fit', sourceDurationMinutes: 34, sourceAccess: 'Pro' },
+              { id: 'q26_l10_5', name: 'Hypothesis tests of the slope coefficient', sourceDurationMinutes: 29, sourceAccess: 'Pro' },
+              { id: 'q26_l10_6', name: 'Hypothesis tests of the intercept', sourceDurationMinutes: 13, sourceAccess: 'Pro' },
+              { id: 'q26_l10_7', name: 'ANOVA and standard error of estimate', sourceDurationMinutes: 21, sourceAccess: 'Pro' },
+              { id: 'q26_l10_8', name: 'Prediction using simple linear regression', sourceDurationMinutes: 17, sourceAccess: 'Pro' },
+              { id: 'q26_l10_9', name: 'Functional forms for simple linear regression', sourceDurationMinutes: 8, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'quant_2026_m11',
+            name: 'Learning Module 11. Introduction to Big Data Techniques',
+            lessons: [
+              { id: 'q26_l11_1', name: 'How is fintech used in quantitative investment analysis', sourceDurationMinutes: 20, sourceAccess: 'Pro' },
+              { id: 'q26_l11_2', name: 'Advanced analytical tools: AI and machine learning', sourceDurationMinutes: 17, sourceAccess: 'Pro' },
+              { id: 'q26_l11_3', name: 'Tackling big data with data science', sourceDurationMinutes: 15, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'econ_2026',
+        name: 'Economics',
+        weight: 8,
+        modules: [
+          {
+            id: 'econ_2026_m1',
+            name: 'Learning Module 1. Firms and Market Structures',
+            lessons: [
+              { id: 'e26_l1_1', name: 'Demand analysis: elasticity of demand and revenue', sourceDurationMinutes: 32, sourceAccess: 'Pro' },
+              { id: 'e26_l1_2', name: 'Cost of production and profit maximization', sourceDurationMinutes: 28, sourceAccess: 'Pro' },
+              { id: 'e26_l1_3', name: 'Perfect competition and monopoly characteristics', sourceDurationMinutes: 35, sourceAccess: 'Pro' },
+              { id: 'e26_l1_4', name: 'Monopolistic competition and oligopoly', sourceDurationMinutes: 40, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'econ_2026_m2',
+            name: 'Learning Module 2. Aggregate Output, Prices, and Economic Growth',
+            lessons: [
+              { id: 'e26_l2_1', name: 'Gross Domestic Product (GDP) definition and measurement', sourceDurationMinutes: 26, sourceAccess: 'Pro' },
+              { id: 'e26_l2_2', name: 'Aggregate demand and aggregate supply curves', sourceDurationMinutes: 42, sourceAccess: 'Pro' },
+              { id: 'e26_l2_3', name: 'Macroeconomic equilibrium and economic growth drivers', sourceDurationMinutes: 31, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'econ_2026_m3',
+            name: 'Learning Module 3. Understanding Business Cycles',
+            lessons: [
+              { id: 'e26_l3_1', name: 'Phases of the business cycle', sourceDurationMinutes: 22, sourceAccess: 'Pro' },
+              { id: 'e26_l3_2', name: 'Inflation measures and indices (CPI, PPI)', sourceDurationMinutes: 27, sourceAccess: 'Pro' },
+              { id: 'e26_l3_3', name: 'Economic indicators: leading, coincident, and lagging', sourceDurationMinutes: 24, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'econ_2026_m4',
+            name: 'Learning Module 4. Monetary and Fiscal Policy',
+            lessons: [
+              { id: 'e26_l4_1', name: 'Functions of money and central bank roles', sourceDurationMinutes: 30, sourceAccess: 'Pro' },
+              { id: 'e26_l4_2', name: 'Monetary policy tools and transmission mechanism', sourceDurationMinutes: 38, sourceAccess: 'Pro' },
+              { id: 'e26_l4_3', name: 'Fiscal policy tools, multiplier effect, and budget deficits', sourceDurationMinutes: 33, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'econ_2026_m5',
+            name: 'Learning Module 5. International Trade and Capital Flows',
+            lessons: [
+              { id: 'e26_l5_1', name: 'Comparative advantage and gains from trade', sourceDurationMinutes: 25, sourceAccess: 'Pro' },
+              { id: 'e26_l5_2', name: 'Trade restrictions: tariffs, quotas, and non-tariff barriers', sourceDurationMinutes: 29, sourceAccess: 'Pro' },
+              { id: 'e26_l5_3', name: 'Balance of payments accounting', sourceDurationMinutes: 31, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'econ_2026_m6',
+            name: 'Learning Module 6. Currency Exchange Rates',
+            lessons: [
+              { id: 'e26_l6_1', name: 'Foreign exchange market structure and spot vs forward rates', sourceDurationMinutes: 34, sourceAccess: 'Pro' },
+              { id: 'e26_l6_2', name: 'Cross-rate calculations and triangular arbitrage', sourceDurationMinutes: 26, sourceAccess: 'Pro' },
+              { id: 'e26_l6_3', name: 'Exchange rate regimes and Purchasing Power Parity (PPP)', sourceDurationMinutes: 36, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'corp_2026',
+        name: 'Corporate Issuers',
+        weight: 8,
+        modules: [
+          {
+            id: 'corp_2026_m1',
+            name: 'Learning Module 1. Corporate Structures and Governance',
+            lessons: [
+              { id: 'c26_l1_1', name: 'Corporate structures, stakeholder management and board oversight', sourceDurationMinutes: 31, sourceAccess: 'Pro' },
+              { id: 'c26_l1_2', name: 'Principal-agent conflicts and corporate governance mechanisms', sourceDurationMinutes: 27, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'corp_2026_m2',
+            name: 'Learning Module 2. Capital Structure and Cost of Capital',
+            lessons: [
+              { id: 'c26_l2_1', name: 'Weighted Average Cost of Capital (WACC) computation', sourceDurationMinutes: 38, sourceAccess: 'Pro' },
+              { id: 'c26_l2_2', name: 'Cost of equity via CAPM and Dividend Discount Model', sourceDurationMinutes: 24, sourceAccess: 'Pro' },
+              { id: 'c26_l2_3', name: 'Cost of debt and preferred stock', sourceDurationMinutes: 19, sourceAccess: 'Pro' },
+              { id: 'c26_l2_4', name: 'Capital structure policy and Modigliani-Miller propositions', sourceDurationMinutes: 33, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'corp_2026_m3',
+            name: 'Learning Module 3. Capital Investments and Project Analysis',
+            lessons: [
+              { id: 'c26_l3_1', name: 'Capital budgeting process: NPV and IRR methods', sourceDurationMinutes: 44, sourceAccess: 'Pro' },
+              { id: 'c26_l3_2', name: 'NPV profile, crossover rate, and Payback Period', sourceDurationMinutes: 28, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'corp_2026_m4',
+            name: 'Learning Module 4. Working Capital & Liquidity Management',
+            lessons: [
+              { id: 'c26_l4_1', name: 'Cash conversion cycle and working capital ratios', sourceDurationMinutes: 26, sourceAccess: 'Pro' },
+              { id: 'c26_l4_2', name: 'Short-term borrowing and liquidity metrics', sourceDurationMinutes: 22, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'fsa_2026',
+        name: 'Financial Statement Analysis',
+        weight: 13,
+        modules: [
+          {
+            id: 'fsa_2026_m1',
+            name: 'Learning Module 1. Financial Reporting Overview',
+            lessons: [
+              { id: 'f26_l1_1', name: 'Financial statement roles and primary financial statements', sourceDurationMinutes: 25, sourceAccess: 'Pro' },
+              { id: 'f26_l1_2', name: 'Financial reporting standards (IFRS vs US GAAP)', sourceDurationMinutes: 35, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m2',
+            name: 'Learning Module 2. Income Statements',
+            lessons: [
+              { id: 'f26_l2_1', name: 'Revenue recognition principles under IFRS 15 / ASC 606', sourceDurationMinutes: 41, sourceAccess: 'Pro' },
+              { id: 'f26_l2_2', name: 'Expense recognition and non-recurring items', sourceDurationMinutes: 30, sourceAccess: 'Pro' },
+              { id: 'f26_l2_3', name: 'Basic and diluted Earnings Per Share (EPS) calculations', sourceDurationMinutes: 48, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m3',
+            name: 'Learning Module 3. Balance Sheets',
+            lessons: [
+              { id: 'f26_l3_1', name: 'Current vs non-current assets and liabilities', sourceDurationMinutes: 32, sourceAccess: 'Pro' },
+              { id: 'f26_l3_2', name: 'Financial assets measurement: Amortized cost vs Fair Value', sourceDurationMinutes: 39, sourceAccess: 'Pro' },
+              { id: 'f26_l3_3', name: 'Equity components and treasury stock transactions', sourceDurationMinutes: 23, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m4',
+            name: 'Learning Module 4. Cash Flow Statements',
+            lessons: [
+              { id: 'f26_l4_1', name: 'CFO, CFI, and CFF classification under IFRS and GAAP', sourceDurationMinutes: 36, sourceAccess: 'Pro' },
+              { id: 'f26_l4_2', name: 'Direct vs Indirect method for operating cash flow', sourceDurationMinutes: 52, sourceAccess: 'Pro' },
+              { id: 'f26_l4_3', name: 'Free Cash Flow to Firm (FCFF) and Free Cash Flow to Equity (FCFE)', sourceDurationMinutes: 40, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m5',
+            name: 'Learning Module 5. Financial Analysis Techniques & Ratios',
+            lessons: [
+              { id: 'f26_l5_1', name: 'Activity, liquidity, solvency, and profitability ratios', sourceDurationMinutes: 55, sourceAccess: 'Pro' },
+              { id: 'f26_l5_2', name: 'DuPont analysis: 3-step and 5-step breakdown of ROE', sourceDurationMinutes: 38, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m6',
+            name: 'Learning Module 6. Inventories & Long-Lived Assets',
+            lessons: [
+              { id: 'f26_l6_1', name: 'FIFO vs LIFO vs Weighted Average cost methods', sourceDurationMinutes: 46, sourceAccess: 'Pro' },
+              { id: 'f26_l6_2', name: 'LIFO reserve and converting LIFO to FIFO statements', sourceDurationMinutes: 37, sourceAccess: 'Pro' },
+              { id: 'f26_l6_3', name: 'Capitalizing vs expensing long-lived assets', sourceDurationMinutes: 31, sourceAccess: 'Pro' },
+              { id: 'f26_l6_4', name: 'Depreciation methods, impairment testing, and derecognition', sourceDurationMinutes: 44, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fsa_2026_m7',
+            name: 'Learning Module 7. Income Taxes & Non-Current Liabilities',
+            lessons: [
+              { id: 'f26_l7_1', name: 'Deferred Tax Assets (DTA) and Deferred Tax Liabilities (DTL)', sourceDurationMinutes: 49, sourceAccess: 'Pro' },
+              { id: 'f26_l7_2', name: 'Bonds payable: issuance, coupon amortization, and redemption', sourceDurationMinutes: 43, sourceAccess: 'Pro' },
+              { id: 'f26_l7_3', name: 'Lease accounting for lessees: Finance vs Operating leases', sourceDurationMinutes: 39, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'equity_2026',
+        name: 'Equity Investments',
+        weight: 11,
+        modules: [
+          {
+            id: 'equity_2026_m1',
+            name: 'Learning Module 1. Market Organization and Structure',
+            lessons: [
+              { id: 'eq26_l1_1', name: 'Financial assets, intermediaries, and market types', sourceDurationMinutes: 28, sourceAccess: 'Pro' },
+              { id: 'eq26_l1_2', name: 'Execution orders: market, limit, stop-loss orders', sourceDurationMinutes: 31, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'equity_2026_m2',
+            name: 'Learning Module 2. Security Market Indexes',
+            lessons: [
+              { id: 'eq26_l2_1', name: 'Price-weighted, equal-weighted, and market-cap weighted indexes', sourceDurationMinutes: 36, sourceAccess: 'Pro' },
+              { id: 'eq26_l2_2', name: 'Index rebalancing and reconstitution', sourceDurationMinutes: 18, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'equity_2026_m3',
+            name: 'Learning Module 3. Market Efficiency',
+            lessons: [
+              { id: 'eq26_l3_1', name: 'Weak, semi-strong, and strong forms of Market Efficiency', sourceDurationMinutes: 33, sourceAccess: 'Pro' },
+              { id: 'eq26_l3_2', name: 'Market anomalies and behavioral finance biases', sourceDurationMinutes: 27, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'equity_2026_m4',
+            name: 'Learning Module 4. Overview of Equity Securities & Industry Analysis',
+            lessons: [
+              { id: 'eq26_l4_1', name: 'Common vs Preferred stock characteristics', sourceDurationMinutes: 24, sourceAccess: 'Pro' },
+              { id: 'eq26_l4_2', name: 'Industry life cycle and Porter five forces analysis', sourceDurationMinutes: 38, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'equity_2026_m5',
+            name: 'Learning Module 5. Equity Valuation: Concepts and Basic Tools',
+            lessons: [
+              { id: 'eq26_l5_1', name: 'Dividend Discount Model (DDM) and Gordon Growth Model', sourceDurationMinutes: 47, sourceAccess: 'Pro' },
+              { id: 'eq26_l5_2', name: 'Free Cash Flow Valuation & Multiples (P/E, P/B, EV/EBITDA)', sourceDurationMinutes: 42, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'fixed_2026',
+        name: 'Fixed Income',
+        weight: 12,
+        modules: [
+          {
+            id: 'fixed_2026_m1',
+            name: 'Learning Module 1. Fixed-Income Securities: Defining Elements',
+            lessons: [
+              { id: 'fi26_l1_1', name: 'Bond indenture provisions, covenants, and collateral', sourceDurationMinutes: 34, sourceAccess: 'Pro' },
+              { id: 'fi26_l1_2', name: 'Fixed income cash flow structures: floating rate and index-linked', sourceDurationMinutes: 29, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fixed_2026_m2',
+            name: 'Learning Module 2. Fixed-Income Markets: Issuance, Trading, and Funding',
+            lessons: [
+              { id: 'fi26_l2_1', name: 'Primary market bond issuance and underwriting', sourceDurationMinutes: 26, sourceAccess: 'Pro' },
+              { id: 'fi26_l2_2', name: 'Secondary bond market trading and repo agreements', sourceDurationMinutes: 31, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fixed_2026_m3',
+            name: 'Learning Module 3. Introduction to Fixed-Income Valuation',
+            lessons: [
+              { id: 'fi26_l3_1', name: 'Bond pricing formula and yield-to-maturity (YTM)', sourceDurationMinutes: 48, sourceAccess: 'Pro' },
+              { id: 'fi26_l3_2', name: 'Full price, clean price, accrued interest, and spot rates', sourceDurationMinutes: 37, sourceAccess: 'Pro' },
+              { id: 'fi26_l3_3', name: 'Yield spreads: G-spread, I-spread, and Z-spread', sourceDurationMinutes: 41, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fixed_2026_m4',
+            name: 'Learning Module 4. Asset-Backed Securities (ABS)',
+            lessons: [
+              { id: 'fi26_l4_1', name: 'Securitization process and Mortgage-Backed Securities (MBS)', sourceDurationMinutes: 39, sourceAccess: 'Pro' },
+              { id: 'fi26_l4_2', name: 'Prepayment risk: contraction vs extension risk', sourceDurationMinutes: 32, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fixed_2026_m5',
+            name: 'Learning Module 5. Understanding Fixed-Income Risk and Return',
+            lessons: [
+              { id: 'fi26_l5_1', name: 'Macaulay duration, Modified duration, and Effective duration', sourceDurationMinutes: 56, sourceAccess: 'Pro' },
+              { id: 'fi26_l5_2', name: 'Convexity adjustment and price change approximations', sourceDurationMinutes: 38, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'fixed_2026_m6',
+            name: 'Learning Module 6. Fundamentals of Credit Analysis',
+            lessons: [
+              { id: 'fi26_l6_1', name: 'Credit risk metrics: Default probability and Loss Given Default', sourceDurationMinutes: 30, sourceAccess: 'Pro' },
+              { id: 'fi26_l6_2', name: 'Credit rating agencies and the 4 Cs of credit analysis', sourceDurationMinutes: 35, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'derivatives_2026',
+        name: 'Derivatives',
+        weight: 8,
+        modules: [
+          {
+            id: 'derivatives_2026_m1',
+            name: 'Learning Module 1. Derivative Markets and Instruments',
+            lessons: [
+              { id: 'd26_l1_1', name: 'Forward contracts vs Futures contracts features', sourceDurationMinutes: 33, sourceAccess: 'Pro' },
+              { id: 'd26_l1_2', name: 'Swaps and Options (Calls vs Puts) definitions', sourceDurationMinutes: 37, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'derivatives_2026_m2',
+            name: 'Learning Module 2. Basics of Derivative Pricing and Valuation',
+            lessons: [
+              { id: 'd26_l2_1', name: 'Arbitrage and storage cost pricing of forwards', sourceDurationMinutes: 44, sourceAccess: 'Pro' },
+              { id: 'd26_l2_2', name: 'European vs American option payoff & moneyness', sourceDurationMinutes: 39, sourceAccess: 'Pro' },
+              { id: 'd26_l2_3', name: 'Put-Call Parity relationship', sourceDurationMinutes: 42, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'alts_2026',
+        name: 'Alternative Investments',
+        weight: 7,
+        modules: [
+          {
+            id: 'alts_2026_m1',
+            name: 'Learning Module 1. Alternative Investment Features & Performance',
+            lessons: [
+              { id: 'a26_l1_1', name: 'Hedge funds: strategies, fee structures (2 and 20)', sourceDurationMinutes: 36, sourceAccess: 'Pro' },
+              { id: 'a26_l1_2', name: 'Private equity: LBOs, venture capital, and exit routes', sourceDurationMinutes: 34, sourceAccess: 'Pro' },
+              { id: 'a26_l1_3', name: 'Real estate, commodities, infrastructure, and private debt', sourceDurationMinutes: 40, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'pm_2026',
+        name: 'Portfolio Management',
+        weight: 8,
+        modules: [
+          {
+            id: 'pm_2026_m1',
+            name: 'Learning Module 1. Portfolio Management: An Overview',
+            lessons: [
+              { id: 'pm26_l1_1', name: 'Individual vs Institutional investors and asset allocation', sourceDurationMinutes: 28, sourceAccess: 'Pro' },
+              { id: 'pm26_l1_2', name: 'Pooled investment products: Mutual funds vs ETFs', sourceDurationMinutes: 31, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'pm_2026_m2',
+            name: 'Learning Module 2. Portfolio Risk and Return: Part I',
+            lessons: [
+              { id: 'pm26_l2_1', name: 'Risk aversion, utility curves, and mean-variance analysis', sourceDurationMinutes: 35, sourceAccess: 'Pro' },
+              { id: 'pm26_l2_2', name: 'Markowitz Efficient Frontier and Capital Allocation Line (CAL)', sourceDurationMinutes: 42, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'pm_2026_m3',
+            name: 'Learning Module 3. Portfolio Risk and Return: Part II',
+            lessons: [
+              { id: 'pm26_l3_1', name: 'Capital Asset Pricing Model (CAPM) and Beta calculation', sourceDurationMinutes: 49, sourceAccess: 'Pro' },
+              { id: 'pm26_l3_2', name: 'Sharpe ratio, Treynor ratio, and Jensen alpha', sourceDurationMinutes: 38, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'pm_2026_m4',
+            name: 'Learning Module 4. Basics of Portfolio Planning and Construction',
+            lessons: [
+              { id: 'pm26_l4_1', name: 'Investment Policy Statement (IPS): Objectives & Constraints', sourceDurationMinutes: 41, sourceAccess: 'Pro' },
+              { id: 'pm26_l4_2', name: 'Strategic vs Tactical Asset Allocation', sourceDurationMinutes: 27, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ethics_2026',
+        name: 'Ethics and Professional Standards',
+        weight: 17,
+        modules: [
+          {
+            id: 'ethics_2026_m1',
+            name: 'Learning Module 1. Ethics and Trust in the Investment Profession',
+            lessons: [
+              { id: 'eth26_l1_1', name: 'Ethics, professions, and code of conduct foundations', sourceDurationMinutes: 30, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'ethics_2026_m2',
+            name: 'Learning Module 2. Code of Ethics and Standards of Professional Conduct',
+            lessons: [
+              { id: 'eth26_l2_1', name: 'Standard I: Professionalism (Knowledge of Law, Independence)', sourceDurationMinutes: 45, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_2', name: 'Standard II: Integrity of Capital Markets (Material Nonpublic Info)', sourceDurationMinutes: 40, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_3', name: 'Standard III: Duties to Clients (Loyalty, Suitability, Fair Dealing)', sourceDurationMinutes: 55, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_4', name: 'Standard IV: Duties to Employers (Loyalty, Compensation)', sourceDurationMinutes: 38, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_5', name: 'Standard V: Investment Analysis, Recommendations, and Actions', sourceDurationMinutes: 42, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_6', name: 'Standard VI: Conflicts of Interest (Disclosure, Priority of Transactions)', sourceDurationMinutes: 36, sourceAccess: 'Pro' },
+              { id: 'eth26_l2_7', name: 'Standard VII: Responsibilities as a CFA Institute Member or Candidate', sourceDurationMinutes: 28, sourceAccess: 'Pro' }
+            ]
+          },
+          {
+            id: 'ethics_2026_m3',
+            name: 'Learning Module 3. Global Investment Performance Standards (GIPS)',
+            lessons: [
+              { id: 'eth26_l3_1', name: 'GIPS objectives, key concepts, and compliance criteria', sourceDurationMinutes: 39, sourceAccess: 'Pro' }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+
+  const CURRICULUM_2027 = {
+    curriculumYear: 2027,
+    source: 'Let Me Explain',
+    sourceUrl: 'https://letmeexplain.eu/learning-library/2027/level-1',
+    topics: CURRICULUM_2026.topics.map(t => {
+      if (t.name === 'Quantitative Methods') {
+        return {
+          id: 'quant_2027',
+          name: 'Quantitative Methods',
+          weight: 8,
+          modules: [
+            {
+              id: 'quant_2027_m0',
+              name: 'Prerequisites (TI BA II Plus setup and Time Value of Money)',
+              lessons: [
+                { id: 'q27_l0_1', name: 'Formatting the Texas Instruments BA II Plus calculator for the CFA exam', sourceDurationMinutes: 10, sourceAccess: 'Free' },
+                { id: 'q27_l0_2', name: 'Time Value of Money (TVM) - computing Future Value', sourceDurationMinutes: 13, sourceAccess: 'Free' },
+                { id: 'q27_l0_3', name: 'Time Value of Money (TVM) - computing Present Value', sourceDurationMinutes: 8, sourceAccess: 'Free' },
+                { id: 'q27_l0_4', name: 'Time Value of Money (TVM) - computing the number of periods', sourceDurationMinutes: 3, sourceAccess: 'Free' },
+                { id: 'q27_l0_5', name: 'Time Value of Money (TVM) – computing the rate of interest', sourceDurationMinutes: 6, sourceAccess: 'Free' },
+                { id: 'q27_l0_6', name: 'Time Value of Money (TVM) - annuities', sourceDurationMinutes: 4, sourceAccess: 'Free' },
+                { id: 'q27_l0_7', name: 'Time Value of Money (TVM) - unequal cash flows using CF worksheet', sourceDurationMinutes: 11, sourceAccess: 'Free' },
+                { id: 'q27_l0_8', name: 'Time Value of Money (TVM) - solving complex TVM problems', sourceDurationMinutes: 6, sourceAccess: 'Free' }
+              ]
+            },
+            {
+              id: 'quant_2027_m1',
+              name: 'Learning Module 1. Returns of Financial Assets and Instruments',
+              lessons: [
+                { id: 'q27_l1_1', name: 'Total return and its components', sourceDurationMinutes: 17, sourceAccess: 'Pro' },
+                { id: 'q27_l1_2', name: 'Arithmetic and geometric returns', sourceDurationMinutes: 26, sourceAccess: 'Pro' },
+                { id: 'q27_l1_3', name: 'Compounding', sourceDurationMinutes: 23, sourceAccess: 'Pro' }
+              ]
+            },
+            {
+              id: 'quant_2027_m2',
+              name: 'Learning Module 2. Types of Financial Returns',
+              lessons: [
+                { id: 'q27_l2_1', name: 'Required rate of return', sourceDurationMinutes: 12, sourceAccess: 'Pro' },
+                { id: 'q27_l2_2', name: 'Common return measures', sourceDurationMinutes: 16, sourceAccess: 'Pro' },
+                { id: 'q27_l2_3', name: 'Types of returns', sourceDurationMinutes: 33, sourceAccess: 'Pro' },
+                { id: 'q27_l2_4', name: 'Risks and returns', sourceDurationMinutes: 66, sourceAccess: 'Pro' },
+                { id: 'q27_l2_5', name: 'MWR and TWR – money-weighted and time-weighted rates of return', sourceDurationMinutes: 30, sourceAccess: 'Pro' },
+                { id: 'q27_l2_6', name: 'Investment applications of MWR and TWR', sourceDurationMinutes: 46, sourceAccess: 'Pro' }
+              ]
+            },
+            {
+              id: 'quant_2027_m3',
+              name: 'Learning Module 3. Benchmarking Returns',
+              lessons: [
+                { id: 'q27_l3_1', name: 'Index definition and construction', sourceDurationMinutes: 15, sourceAccess: 'Pro' },
+                { id: 'q27_l3_2', name: 'Index management', sourceDurationMinutes: 52, sourceAccess: 'Pro' }
+              ]
+            },
+            {
+              id: 'quant_2027_m4',
+              name: 'Learning Module 4. The Time Value of Money in Finance',
+              lessons: [
+                { id: 'q27_l4_1', name: 'The time value of money in fixed income and equity', sourceDurationMinutes: 45, sourceAccess: 'Pro' },
+                { id: 'q27_l4_2', name: 'Implied return and growth', sourceDurationMinutes: 38, sourceAccess: 'Pro' },
+                { id: 'q27_l4_3', name: 'Cash flow additivity', sourceDurationMinutes: 21, sourceAccess: 'Pro' }
+              ]
+            },
+            {
+              id: 'quant_2027_m5',
+              name: 'Learning Module 5: Statistical Characteristics of Asset Returns',
+              lessons: [
+                { id: 'q27_l5_1', name: 'Measures of central tendency', sourceDurationMinutes: 39, sourceAccess: 'Pro' },
+                { id: 'q27_l5_2', name: 'Properties of the arithmetic mean', sourceDurationMinutes: 11, sourceAccess: 'Pro' },
+                { id: 'q27_l5_3', name: 'Mode and median', sourceDurationMinutes: 5, sourceAccess: 'Pro' },
+                { id: 'q27_l5_4', name: 'Dealing with outliers', sourceDurationMinutes: 10, sourceAccess: 'Pro' },
+                { id: 'q27_l5_5', name: 'Quartiles and quintiles', sourceDurationMinutes: 7, sourceAccess: 'Pro' },
+                { id: 'q27_l5_6', name: 'Deciles and percentiles', sourceDurationMinutes: 3, sourceAccess: 'Pro' },
+                { id: 'q27_l5_7', name: 'Measures of location continued', sourceDurationMinutes: 13, sourceAccess: 'Pro' },
+                { id: 'q27_l5_8', name: 'Range and Mean Absolute Deviation - MAD', sourceDurationMinutes: 11, sourceAccess: 'Pro' },
+                { id: 'q27_l5_9', name: 'Median absolute deviation', sourceDurationMinutes: 14, sourceAccess: 'Pro' },
+                { id: 'q27_l5_10', name: 'Variance and standard deviation', sourceDurationMinutes: 18, sourceAccess: 'Pro' },
+                { id: 'q27_l5_11', name: 'Measures of the shape of a disrtibution', sourceDurationMinutes: 16, sourceAccess: 'Pro' },
+                { id: 'q27_l5_12', name: 'Covariance and correlation', sourceDurationMinutes: 37, sourceAccess: 'Pro' }
+              ]
+            }
+          ]
+        };
+      }
+      return {
+        ...t,
+        id: t.id.replace('2026', '2027'),
+        modules: t.modules.map(m => ({
+          ...m,
+          id: m.id.replace('2026', '2027')
+        }))
+      };
+    })
+  };
+
+  const INITIAL_RESOURCES = [
+    {
+      id: 'res_lme_2026',
+      name: 'Let Me Explain - 2026 CFA L1 Coverage',
+      provider: 'Let Me Explain',
+      url: 'https://letmeexplain.eu/learning-library/2026/level-1?page_id=6481',
+      type: 'Let Me Explain',
+      topic: 'Quantitative Methods',
+      status: 'Active',
+      rating: 5,
+      notes: 'Primary curriculum structure reference page with video lesson durations.'
+    },
+    {
+      id: 'res_cfai_ecosystem',
+      name: 'CFA Institute Learning Ecosystem (LES)',
+      provider: 'CFA Institute',
+      url: 'https://candidate.cfainstitute.org/',
+      type: 'Official',
+      topic: 'Ethics and Professional Standards',
+      status: 'Active',
+      rating: 5,
+      notes: 'Official practice questions and mock exams repository.'
+    }
+  ];
+
+  // --- 2. STORE ---
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v16';
+
+  const safeStorage = {
+    getItem(key) {
+      try {
+        return safeStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    },
+    setItem(key, val) {
+      try {
+        safeStorage.setItem(key, val);
+      } catch (e) {
+        console.warn('Storage unavailable:', e);
+      }
+    }
+  };
+
+  function getInitialState() {
+    const today = new Date().toISOString().split('T')[0];
+    return {
+      selectedAttemptId: 'nov_2026',
+      mockTimeCountsToward300: true,
+      coderProfile: {
+        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80'',
+        name: 'Ishan Nagpal',
+        role: 'Architect & Lead System Developer',
+        linkedin: 'https://linkedin.com/in/ishannagpal07',
+        oneLiner: 'Quant obsessive building high-stakes financial tools & personal operating systems.',
+        favTopic: 'Fixed Income',
+        leastFavTopic: 'Financial Statement Analysis',
+        streak: 11,
+        devNote: 'CFA L1 // Braindump was built to eliminate exam panic through absolute tracking and zero fluff.'
+      },
+      activeTimer: null,
+      studySessions: [
+        {
+          id: 'sess_1',
+          attemptId: 'nov_2026',
+          date: today,
+          startTime: '09:00',
+          endTime: '11:14',
+          durationSeconds: 2700,
+          topic: 'Quantitative Methods',
+          module: 'Prerequisites (TI BA II Plus setup and Time Value of Money)',
+          lesson: 'Formatting the Texas Instruments BA II Plus calculator for the CFA exam',
+          activity: 'LES',
+          countsToward300: true,
+          note: 'Completed TI calculator setup and formatting.'
+        }
+      ],
+      lessonTracking: {},
+      questionLogs: [],
+      mistakes: [
+        {
+          id: 'mistake_1',
+          date: today,
+          source: 'CFA LES',
+          questionTitle: 'Accrued Interest calculation under Actual/Actual convention',
+          topic: 'Fixed Income',
+          whyWrong: 'Forgot to add accrued interest to clean price when calculating buyer settlement cash.',
+          correctConcept: 'Full Price = Clean Price + Accrued Interest. Settlement value is always Full Price.',
+          formula: 'Full Price = PV(clean) + AI',
+          trap: 'Quote is clean price, but transaction settles at full price.',
+          status: 'New'
+        }
+      ],
+      flashcards: [
+        {
+          id: 'card_1',
+          mistakeId: 'mistake_1',
+          topic: 'Fixed Income',
+          front: 'What is the relationship between Clean Price, Full Price, and Accrued Interest for bond settlement?',
+          back: 'Full Price (Settlement Price) = Clean Price (Quoted Price) + Accrued Interest.\nAccrued Interest = (Days Elapsed / Days in Coupon Period) * Coupon Payment.',
+          interval: 1,
+          ease: 2.5,
+          nextReview: today,
+          status: 'Due'
+        }
+      ],
+      mocks: [],
+      resources: INITIAL_RESOURCES,
+      weeklyPlan: {
+        generatedDate: today,
+        targetHoursThisWeek: 18,
+        items: []
+      }
+    };
+  }
+
+  class Store {
+    constructor() {
+      window.app = this;
+      this.currentTab = 'control_room';
+      this.practiceSubFilter = 'all';
+      this.init();
+    }
+
+    init() {
+      if (store.state.activeTimer && store.state.activeTimer.isRunning) {
+        this.startInterval();
+      }
+    }
+
+    startTimer({ mode = 'stopwatch', topic, activity, focusMinutes = 25, breakMinutes = 5, note = "" }) {
+      const now = new Date();
+      store.state.activeTimer = {
+        mode,
+        startTimeDisplay: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        startTimestamp: Date.now(),
+        topic: topic || "General Study",
+        activity: activity || "LES",
+        note,
+        elapsedSeconds: 0,
+        focusSecondsTotal: (parseInt(focusMinutes) || 25) * 60,
+        breakSecondsTotal: (parseInt(breakMinutes) || 5) * 60,
+        phase: 'focus',
+        completedPomodoros: 0,
+        isRunning: true
+      };
+      store.save();
+      this.startInterval();
+    }
+
+    startInterval() {
+      if (this.intervalId) clearInterval(this.intervalId);
+      this.intervalId = setInterval(() => {
+        if (store.state.activeTimer && store.state.activeTimer.isRunning) {
+          const timer = store.state.activeTimer;
+          const now = Date.now();
+          const start = timer.startTimestamp;
+          const elapsed = Math.floor((now - start) / 1000);
+          timer.elapsedSeconds = elapsed;
+
+          if (timer.mode === 'pomodoro') {
+            const targetTotal = timer.phase === 'focus' ? timer.focusSecondsTotal : timer.breakSecondsTotal;
+            if (elapsed >= targetTotal) {
+              if (timer.phase === 'focus') {
+                this.logCompletedPomodoroFocus(timer);
+                timer.phase = 'break';
+                timer.completedPomodoros = (timer.completedPomodoros || 0) + 1;
+                timer.startTimestamp = Date.now();
+                timer.elapsedSeconds = 0;
+                alert(`🍅 Pomodoro Focus Complete! Take a ${timer.breakSecondsTotal / 60}-minute break.`);
+              } else {
+                timer.phase = 'focus';
+                timer.startTimestamp = Date.now();
+                timer.elapsedSeconds = 0;
+                alert(`⚡ Break Complete! Ready for your next Pomodoro focus cycle?`);
+              }
+            }
+          }
+
+          store.notify();
+        }
+      }, 1000);
+    }
+
+    logCompletedPomodoroFocus(timer) {
+      const durationSeconds = timer.focusSecondsTotal;
+      const endNow = new Date();
+      const newSession = {
+        id: "sess_pomo_" + Date.now(),
+        attemptId: store.state.selectedAttemptId,
+        date: endNow.toISOString().split("T")[0],
+        startTime: timer.startTimeDisplay,
+        endTime: endNow.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        durationSeconds,
+        topic: timer.topic,
+        activity: timer.activity,
+        countsToward300: true,
+        note: `🍅 Completed ${timer.focusSecondsTotal / 60}m Pomodoro focus session`
+      };
+      if (!store.state.studySessions) store.state.studySessions = [];
+      store.state.studySessions.unshift(newSession);
+      store.save();
+    }
+
+    pauseTimer() {
+      if (store.state.activeTimer) {
+        store.state.activeTimer.isRunning = false;
+        if (this.intervalId) clearInterval(this.intervalId);
+        store.save();
+      }
+    }
+
+    resumeTimer() {
+      if (store.state.activeTimer) {
+        store.state.activeTimer.startTimestamp = Date.now() - (store.state.activeTimer.elapsedSeconds * 1000);
+        store.state.activeTimer.isRunning = true;
+        store.save();
+        this.startInterval();
+      }
+    }
+
+    stopTimer(notes = "") {
+      if (!store.state.activeTimer) return null;
+      if (this.intervalId) clearInterval(this.intervalId);
+
+      const timer = store.state.activeTimer;
+      const endNow = new Date();
+      const durationSeconds = timer.elapsedSeconds;
+
+      if (timer.mode === 'stopwatch' || (timer.mode === 'pomodoro' && timer.phase === 'focus' && durationSeconds >= 60)) {
+        const newSession = {
+          id: "sess_" + Date.now(),
+          attemptId: store.state.selectedAttemptId,
+          date: endNow.toISOString().split("T")[0],
+          startTime: timer.startTimeDisplay,
+          endTime: endNow.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          durationSeconds,
+          topic: timer.topic,
+          activity: timer.activity,
+          countsToward300: true,
+          note: notes || timer.note || `${timer.topic} study session`
+        };
+        if (!store.state.studySessions) store.state.studySessions = [];
+        store.state.studySessions.unshift(newSession);
+      }
+
+      store.state.activeTimer = null;
+      store.save();
+    }
+
+    getFormattedTime() {
+      if (!store.state.activeTimer) return "00:00:00";
+      const timer = store.state.activeTimer;
+      let sec = timer.elapsedSeconds || 0;
+
+      if (timer.mode === 'pomodoro') {
+        const targetTotal = timer.phase === 'focus' ? timer.focusSecondsTotal : timer.breakSecondsTotal;
+        sec = Math.max(0, targetTotal - sec);
+      }
+
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      const pad = n => String(n).padStart(2, '0');
+      return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+    }
+  }
+
+  const timerManager = new TimerManager();
+
+  // --- 4. APP VIEW MANAGER CLASS ---
+  class App {
+    constructor() {
+      this.currentTab = 'control_room';
+      this.practiceSubFilter = 'all';
+      this.init();
+    }
+
+    init() {
+      this.initSidebarCollapseState();
+      store.subscribe(() => this.render());
+      this.bindGlobalEvents();
+      this.render();
+    }
+
+    initSidebarCollapseState() {
+      try {
+        const isCollapsed = safeStorage.getItem('cfa_sidebar_collapsed') === 'true';
+        if (isCollapsed) {
+          document.body.classList.add('sidebar-collapsed');
+        } else {
+          document.body.classList.remove('sidebar-collapsed');
+        }
+      } catch (e) {}
+    }
+
+    toggleSidebarCollapse() {
+      try {
+        document.body.classList.toggle('sidebar-collapsed');
+        const collapsedNow = document.body.classList.contains('sidebar-collapsed');
+        safeStorage.setItem('cfa_sidebar_collapsed', collapsedNow);
+      } catch (e) {}
+    }
+
+    toggleSidebarCollapse() {
+      document.body.classList.toggle('sidebar-collapsed');
+      const collapsedNow = document.body.classList.contains('sidebar-collapsed');
+      safeStorage.setItem('cfa_sidebar_collapsed', collapsedNow);
+    }
+
+    bindGlobalEvents() {
+      document.getElementById('btn-toggle-sidebar')?.addEventListener('click', () => this.toggleSidebarCollapse());
+      document.getElementById('btn-expand-sidebar')?.addEventListener('click', () => this.toggleSidebarCollapse());
+
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        const key = e.key.toUpperCase();
+        if (key === 'S') { e.preventDefault(); this.openTimerModal(); }
+        else if (key === 'Q') { e.preventDefault(); this.openQuestionModal(); }
+        else if (key === 'M') { e.preventDefault(); this.openMockModal(); }
+        else if (key === 'F') { e.preventDefault(); this.switchTab('practice'); }
+        else if (e.key === '/') { e.preventDefault(); this.openSearchModal(); }
+      });
+
+      document.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('[data-tab]');
+        if (tabBtn) {
+          const tab = tabBtn.getAttribute('data-tab');
+          if (tab) {
+            this.switchTab(tab);
+            return;
+          }
+        }
+
+        const actionBtn = e.target.closest('[data-action]');
+        if (actionBtn) {
+          const action = actionBtn.getAttribute('data-action');
+          if (action === 'open-timer') {
+            this.openTimerModal();
+            return;
+          } else if (action === 'open-search') {
+            this.openSearchModal();
+            return;
+          }
+        }
+
+        if (e.target.closest('#btn-global-search')) {
+          this.openSearchModal();
+          return;
+        }
+
+        if (e.target.closest('#btn-sidebar-start-study')) {
+          this.openTimerModal();
+          return;
+        }
+      });
+    }
+
+    switchTab(tabId) {
+      this.currentTab = tabId;
+      this.render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    updateActiveTabStyles() {
+      const activeTab = this.currentTab;
+      document.querySelectorAll('[data-tab]').forEach(btn => {
+        if (btn.getAttribute('data-tab') === activeTab) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    render() {
+      try {
+        const mainContainer = document.getElementById('app-main-content');
+        if (!mainContainer) return;
+
+        this.renderHeaderTimerBar();
+        this.renderHeaderCountdown();
+
+        mainContainer.className = 'p-6 sm:p-8 flex-1 tab-content-fade';
+
+        switch (this.currentTab) {
+          case 'control_room':
+          case 'home':
+            mainContainer.innerHTML = this.renderControlRoom();
+            break;
+
+          case 'curriculum':
+            mainContainer.innerHTML = this.renderCurriculumLES();
+            break;
+
+          case 'practice':
+            mainContainer.innerHTML = this.renderPracticeLab();
+            break;
+
+          case 'weekly_plan':
+            mainContainer.innerHTML = this.renderWeeklyPlanView();
+            break;
+
+          case 'profile':
+          case 'resources':
+            mainContainer.innerHTML = this.renderProfileResourcesView();
+            break;
+
+          default:
+            mainContainer.innerHTML = this.renderControlRoom();
+        }
+
+        this.updateActiveTabStyles();
+        this.attachTabEventListeners();
+      } catch (err) {
+        console.error('Render error caught cleanly:', err);
+        const mainContainer = document.getElementById('app-main-content');
+        if (mainContainer) {
+          mainContainer.innerHTML = `
+            <div class="p-8 bg-white border border-[#E4E7E1] rounded-2xl text-center space-y-4 max-w-md mx-auto my-12 shadow-sm">
+              <div class="text-2xl font-bold font-mono text-[#18181B]">CFA L1 // Braindump</div>
+              <p class="text-xs text-[#71717A]">Application state has been safely recovered.</p>
+              <button onclick="localStorage.clear(); location.reload();" class="btn-primary text-xs w-full py-2.5 flex justify-center">Reset &amp; Reload Fresh State</button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    renderHeaderCountdown() {
+      const badge = document.getElementById('header-countdown-badge');
+      if (!badge) return;
+      const attempt = store.getActiveAttempt();
+      const studyStats = store.getStudyStats();
+      badge.textContent = `${attempt.name.toUpperCase()} • ${studyStats.daysRemaining} DAYS LEFT`;
+    }
+
+    renderHeaderTimerBar() {
+      const bar = document.getElementById('persistent-timer-bar');
+      if (!bar) return;
+
+      const timer = store.state.activeTimer;
+      if (timer) {
+        const timeStr = timerManager.getFormattedTime();
+        const modeLabel = timer.mode === 'pomodoro' 
+          ? `🍅 POMODORO (${timer.phase.toUpperCase()})` 
+          : `⏱ STOPWATCH ACTIVE`;
+
+        bar.innerHTML = `
+          <div class="bg-[#18181B] text-white px-6 py-2.5 flex items-center justify-between text-xs font-mono border-b border-[#27272A] shadow-md">
+            <div class="flex items-center gap-3">
+              <span class="pulse-dot"></span>
+              <span class="font-bold tracking-wide text-[#E2EFE7]">${modeLabel}</span>
+              <span class="text-[#A1A1AA]">| ${timer.topic} &bull; ${timer.activity}</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="text-base font-bold tracking-widest text-white font-mono">${timeStr}</span>
+              ${timer.isRunning 
+                ? `<button id="btn-pause-timer" class="px-3 py-1 bg-[#27272A] hover:bg-[#3F3F46] rounded-lg text-white text-xs">Pause</button>`
+                : `<button id="btn-resume-timer" class="px-3 py-1 bg-[#2E6F40] hover:bg-[#255A34] rounded-lg text-white font-semibold text-xs">Resume</button>`
+              }
+              <button id="btn-stop-timer" class="px-3 py-1 bg-rose-800 hover:bg-rose-700 rounded-lg text-white font-semibold text-xs">Stop &amp; Save</button>
+            </div>
+          </div>
+        `;
+        bar.classList.remove('hidden');
+
+        document.getElementById('btn-pause-timer')?.addEventListener('click', () => timerManager.pauseTimer());
+        document.getElementById('btn-resume-timer')?.addEventListener('click', () => timerManager.resumeTimer());
+        document.getElementById('btn-stop-timer')?.addEventListener('click', () => this.openStopTimerModal());
+      } else {
+        bar.classList.add('hidden');
+      }
+    }
+
+    renderControlRoom() {
+      const attempt = store.getActiveAttempt();
+      const studyStats = store.getStudyStats();
+      const qStats = store.getQuestionStats();
+      const mockStats = store.getMockStats();
+      const lesStats = store.getLESStats();
+      const dueCards = (store.state.flashcards || []).filter(f => f.status === 'Due');
+
+      return `
+        <div class="max-w-7xl mx-auto space-y-8 pb-12">
+          <!-- Page Title Block -->
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div class="text-xs font-mono font-semibold text-[#A1A1AA] uppercase tracking-wider">CFA L1</div>
+              <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#18181B] font-sans mt-0.5">YOUR STUDY SPACE</h1>
+              <p class="text-sm text-[#71717A] mt-1 font-sans">A clear view of what matters today.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <select id="attempt-selector" class="bg-white border border-[#E4E7E1] hover:border-[#CBD2C8] rounded-xl px-4 py-2 text-xs font-semibold text-[#18181B] appearance-none pr-8 cursor-pointer shadow-xs focus:outline-none">
+                  ${EXAM_ATTEMPTS.map(a => `<option value="${a.id}" ${a.id === attempt.id ? 'selected' : ''}>∨ ${a.name}</option>`).join('')}
+                </select>
+              </div>
+
+              <button id="btn-start-study-main" class="btn-primary text-xs py-2 px-4 font-bold flex items-center gap-2" data-action="open-timer">
+                <span>►</span> Start study
+              </button>
+            </div>
+          </div>
+
+          <!-- 6 Metrics Row Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">EXAM</div>
+              <div class="text-base font-bold font-sans text-[#18181B]">${attempt.name}</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">STUDY TIME</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">${studyStats.totalHoursFormatted}</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">TODAY</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">${studyStats.todayHoursFormatted}</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">QUESTIONS</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">${qStats.totalAttempted}</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">MOCK AVG</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">${mockStats.average}</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">LESSONS</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">${lesStats.completionPercentage}%</div>
+            </div>
+          </div>
+
+          <!-- Main 2-Column Dashboard Cards -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Column: YOUR PROGRESS -->
+            <div class="lg:col-span-7 terminal-card p-6 flex flex-col justify-between space-y-6">
+              <div class="space-y-4">
+                <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">YOUR PROGRESS</div>
+                <div class="text-3xl sm:text-4xl font-extrabold font-mono text-[#18181B] tracking-tight">
+                  ${studyStats.completedHours.toFixed(0)}h ${Math.round((studyStats.completedHours % 1) * 60)}m <span class="text-lg font-normal text-[#A1A1AA]">/ 300h</span>
+                </div>
+                <div class="progress-bar-track mt-4">
+                  <div class="progress-bar-fill" style="width: ${studyStats.percentage}%"></div>
+                </div>
+              </div>
+              <div class="text-xs text-[#71717A] font-sans pt-2">
+                Your own pace, one focused session at a time.
+              </div>
+            </div>
+
+            <!-- Right Column: UP NEXT -->
+            <div class="lg:col-span-5 terminal-card p-6 flex flex-col justify-between space-y-6">
+              <div class="space-y-5">
+                <div class="font-bold text-sm text-[#18181B] tracking-tight font-sans">UP NEXT</div>
+
+                <!-- CONTINUE SECTION -->
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">CONTINUE</div>
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-action="open-timer">
+                    <div class="space-y-0.5 max-w-[240px]">
+                      <div class="font-bold text-xs text-[#18181B] leading-snug">Formatting the Texas Instruments BA II Plus calculator for the CFA exam</div>
+                      <div class="text-[11px] text-[#71717A]">Quantitative Methods</div>
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-white border border-[#E4E7E1] flex items-center justify-center text-xs text-[#18181B] shadow-xs">
+                      ►
+                    </div>
+                  </div>
+                </div>
+
+                <!-- OPTIONAL REVIEW SECTION -->
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">OPTIONAL REVIEW</div>
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice">
+                    <div class="font-bold text-xs text-[#18181B]">
+                      ${dueCards.length > 0 ? `${dueCards.length} flashcard cards due` : 'No cards due'}
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-white border border-[#E4E7E1] flex items-center justify-center text-xs text-[#18181B] shadow-xs">
+                      ▱
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-xs text-[#71717A] font-sans pt-2 border-t border-[#F4F4F5]">
+                Small, steady sessions add up.
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    renderCurriculumLES() {
+      const cur = store.getActiveCurriculum();
+      const lesStats = store.getLESStats();
+
+      return `
+        <div class="max-w-7xl mx-auto space-y-6 pb-12">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-5">
+            <div>
+              <div class="flex items-center gap-3">
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#18181B]">Curriculum &amp; LES Tracker</h1>
+                <span class="badge-mono badge-sage">Curriculum Year ${cur.curriculumYear}</span>
+              </div>
+              <p class="text-sm text-[#71717A] mt-0.5">Granular Topic &rarr; Module &rarr; Lesson hierarchy referenced from Let Me Explain.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="btn-compare-curriculum" class="btn-secondary text-xs">Compare 2026 vs 2027</button>
+              <a href="${cur.sourceUrl}" target="_blank" class="btn-secondary text-xs">View Source</a>
+            </div>
+          </div>
+
+          <div class="terminal-card p-6 space-y-2">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+              <h3 class="text-base font-bold font-mono text-[#18181B]">Let Me Explain CFA Level I Learning Module Coverage</h3>
+              <div class="text-xs font-mono text-[#71717A]">Progress: <strong class="text-[#2E6F40]">${lesStats.completionPercentage}%</strong> (${lesStats.completedLessons}/${lesStats.totalLessons})</div>
+            </div>
+            <p class="text-xs text-[#71717A] leading-relaxed">
+              Note: Source video duration is reference material length and does <span class="underline">NOT</span> automatically count toward your 300-hour personal study clock. Only actual logged study sessions enter your total.
+            </p>
+          </div>
+
+          <div class="terminal-card overflow-hidden">
+            <div class="p-4 border-b border-[#E4E7E1] bg-[#F7F9F6] flex justify-between items-center">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[#71717A] font-mono">10 CFA LEVEL I TOPICS</h3>
+              <span class="text-xs font-mono text-[#A1A1AA]">Dynamic Hours Engine Active</span>
+            </div>
+            <div class="divide-y divide-[#E4E7E1]">
+              ${cur.topics.map((t, idx) => {
+                const plannedH = store.getPlannedHoursForTopic(t.name);
+                const sessions = (store.state.studySessions || []).filter(s => s.topic === t.name);
+                const actualH = (sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0) / 3600).toFixed(1);
+                
+                let totalL = 0;
+                let compL = 0;
+                t.modules.forEach(m => m.lessons.forEach(l => {
+                  totalL++;
+                  const track = (store.state.lessonTracking || {})[l.id];
+                  if (track && (track.status === 'Completed' || track.status === 'Mastered')) compL++;
+                }));
+                const lessonPct = totalL > 0 ? Math.round((compL / totalL) * 100) : 0;
+
+                return `
+                  <div class="topic-row hover:bg-[#F7F9F6] transition-colors">
+                    <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer" onclick="document.getElementById('topic-detail-${t.id}').classList.toggle('hidden')">
+                      <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold text-[#A1A1AA]">${String(idx + 1).padStart(2, '0')}.</span>
+                        <div class="font-bold text-sm text-[#18181B]">${t.name}</div>
+                      </div>
+                      <div class="flex items-center gap-6 text-xs font-mono">
+                        <div class="text-[#71717A]">Planned: <strong>${plannedH}h</strong> | Logged: <strong>${actualH}h</strong></div>
+                        <div class="text-[#2E6F40] font-bold">Lessons: ${compL}/${totalL} (${lessonPct}%)</div>
+                        <span class="text-[#A1A1AA] font-bold">Details &darr;</span>
+                      </div>
+                    </div>
+
+                    <div id="topic-detail-${t.id}" class="hidden bg-[#F7F9F6] p-4 border-t border-[#E4E7E1] space-y-4">
+                      ${t.modules.map(m => `
+                        <div class="bg-white border border-[#E4E7E1] rounded-xl p-4 space-y-2">
+                          <div class="font-bold text-xs border-b border-[#E4E7E1] pb-2 flex justify-between text-[#18181B]">
+                            <span>${m.name}</span>
+                            <span class="text-[#A1A1AA] font-normal">${m.lessons.length} lessons</span>
+                          </div>
+                          <div class="divide-y divide-[#F4F4F5]">
+                            ${m.lessons.map(l => {
+                              const track = (store.state.lessonTracking || {})[l.id] || { status: 'Not Started', actualMinutes: 0 };
+                              return `
+                                <div class="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
+                                  <div>
+                                    <span class="font-semibold text-[#18181B]">${l.name}</span>
+                                    <span class="text-[#A1A1AA] font-mono ml-2">(${l.sourceDurationMinutes}m)</span>
+                                  </div>
+                                  <div class="flex items-center gap-2">
+                                    <select class="lesson-status-select border border-[#E4E7E1] rounded-lg px-2 py-1 text-[11px] font-mono bg-[#F7F9F6]" data-lesson-id="${l.id}">
+                                      ${['Not Started', 'In Progress', 'Completed', 'Needs Revision', 'Mastered'].map(s => `
+                                        <option value="${s}" ${track.status === s ? 'selected' : ''}>${s}</option>
+                                      `).join('')}
+                                    </select>
+                                    <button class="btn-secondary text-[11px] py-1 px-2.5 btn-log-lesson-study" data-topic="${t.name}" data-module="${m.name}" data-lesson="${l.name}">
+                                      + Study Time
+                                    </button>
+                                  </div>
+                                </div>
+                              `;
+                            }).join('')}
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    renderPracticeLab() {
+      const dueCards = (store.state.flashcards || []).filter(f => f.status === 'Due');
+      const mockStats = store.getMockStats();
+      const activeFilter = this.practiceSubFilter || 'all';
+      const mistakes = store.state.mistakes || [];
+
+      return `
+        <div class="max-w-7xl mx-auto space-y-6 pb-12">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-5">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#18181B]">Practice &amp; Review Hub</h1>
+              <p class="text-sm text-[#71717A] mt-0.5">Question logger, Wall of Shame mistake bank, SRS flashcards &amp; Mock review debt.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="btn-log-question-modal" class="btn-primary text-xs">+ Log Questions</button>
+              <button id="btn-add-mistake-modal" class="btn-secondary text-xs">+ Wall of Shame</button>
+              <button id="btn-add-mock-modal" class="btn-secondary text-xs">+ Log Mock</button>
+            </div>
+          </div>
+
+          <!-- Practice Hub Sub-Filter Pills -->
+          <div class="flex items-center gap-2 border-b border-[#E4E7E1] pb-3 overflow-x-auto">
+            ${[
+              { id: 'all', label: '⚡ All Practice & Review' },
+              { id: 'mistakes', label: `↺ Wall of Shame (${mistakes.length})` },
+              { id: 'flashcards', label: `▱ SRS Flashcards (${dueCards.length} due)` },
+              { id: 'mocks', label: `⏱ Mock Exams (${mockStats.count})` }
+            ].map(f => `
+              <button class="practice-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold font-mono transition-colors ${activeFilter === f.id ? 'bg-[#E2EFE7] text-[#1C3E2C] border border-[#CBD2C8]' : 'bg-white text-[#71717A] border border-[#E4E7E1] hover:bg-[#F7F9F6]'}" data-filter="${f.id}">
+                ${f.label}
+              </button>
+            `).join('')}
+          </div>
+
+          ${mockStats.reviewDebt > 0 ? `
+            <div class="p-4 bg-rose-900 text-white rounded-xl font-mono text-xs flex justify-between items-center shadow-sm">
+              <div><strong>MOCK REVIEW DEBT DETECTED:</strong> You have ${mockStats.reviewDebt} mock exam review pending!</div>
+              <span class="badge-mono badge-sage bg-[#E2EFE7] text-[#1C3E2C]">Review Debt: ${mockStats.reviewDebt}</span>
+            </div>
+          ` : ''}
+
+          <!-- SECTION 1: MISTAKE BANK / WALL OF SHAME -->
+          ${(activeFilter === 'all' || activeFilter === 'mistakes') ? `
+            <div class="terminal-card p-6 space-y-4">
+              <div class="flex justify-between items-center border-b border-[#E4E7E1] pb-3">
+                <div>
+                  <h3 class="text-lg font-bold text-[#18181B]">The Wall of Shame</h3>
+                  <p class="text-xs text-[#71717A] italic mt-0.5">&ldquo;Wrong answers have nowhere to hide.&rdquo;</p>
+                </div>
+                <span class="badge-mono badge-sage">${mistakes.length} mistakes</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${mistakes.map(m => `
+                  <div class="p-4 bg-white border border-[#E4E7E1] rounded-xl space-y-3 flex flex-col justify-between hover:border-[#CBD2C8] transition-colors">
+                    <div>
+                      <div class="flex items-center justify-between text-[11px] font-mono">
+                        <span class="badge-mono badge-sage">${m.topic}</span>
+                        <span class="text-[#A1A1AA]">${m.date}</span>
+                      </div>
+                      <div class="font-bold text-sm text-[#18181B] mt-2">${m.questionTitle}</div>
+                      <div class="mt-2.5 text-xs text-[#3F3F46] space-y-1.5">
+                        <div><strong class="text-rose-700">Why Wrong:</strong> ${m.whyWrong}</div>
+                        <div><strong class="text-[#2E6F40]">Correct Concept:</strong> ${m.correctConcept}</div>
+                      </div>
+                    </div>
+                    <div class="pt-3 border-t border-[#F4F4F5] flex items-center justify-between">
+                      <span class="badge-mono badge-gray">${m.status}</span>
+                      <button class="btn-secondary text-[11px] py-1 px-3 btn-turn-to-flashcard" data-mistake-id="${m.id}">Turn into Flashcard &rarr;</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- SECTION 2: FLASHCARD SRS -->
+          ${(activeFilter === 'all' || activeFilter === 'flashcards') ? `
+            <div class="terminal-card p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E4E7E1] pb-3">
+                <div>
+                  <h3 class="text-lg font-bold text-[#18181B]">Flashcard Spaced Repetition (SRS)</h3>
+                  <p class="text-xs text-[#71717A]">Every mistake card reviewed on an optimal Anki-style schedule.</p>
+                </div>
+                <div class="text-xs font-mono font-bold text-[#18181B]">Due Today: <span class="text-[#2E6F40]">${dueCards.length}</span></div>
+              </div>
+
+              ${dueCards.length > 0 ? `
+                <div class="max-w-xl mx-auto p-6 bg-[#18181B] text-white rounded-xl shadow-xl text-center space-y-4 font-mono">
+                  <div class="text-[10px] uppercase tracking-wider text-[#E2EFE7] font-bold">${dueCards[0].topic}</div>
+                  <div id="card-front" class="text-sm font-semibold py-2 leading-relaxed">${dueCards[0].front}</div>
+                  <div id="card-back" class="hidden text-xs text-[#E2EFE7] bg-[#27272A] p-3.5 rounded-lg text-left leading-relaxed">${(dueCards[0].back || '').replace(/\n/g, '<br/>')}</div>
+                  <button id="btn-show-card-answer" class="w-full py-2.5 bg-[#2E6F40] hover:bg-[#255A34] font-bold text-xs uppercase tracking-wider rounded-lg text-white transition-colors">Show Answer</button>
+                  <div id="card-srs-buttons" class="hidden grid grid-cols-4 gap-2 text-xs font-mono font-bold">
+                    <button class="btn-srs-choice bg-rose-800 text-white py-2 rounded-lg" data-rating="again" data-card-id="${dueCards[0].id}">Again (1d)</button>
+                    <button class="btn-srs-choice bg-amber-800 text-white py-2 rounded-lg" data-rating="hard" data-card-id="${dueCards[0].id}">Hard (2d)</button>
+                    <button class="btn-srs-choice bg-[#2E6F40] text-white py-2 rounded-lg" data-rating="good" data-card-id="${dueCards[0].id}">Good (4d)</button>
+                    <button class="btn-srs-choice bg-sky-800 text-white py-2 rounded-lg" data-rating="easy" data-card-id="${dueCards[0].id}">Easy (7d)</button>
+                  </div>
+                </div>
+              ` : `
+                <div class="p-6 text-center text-xs font-mono text-[#71717A] bg-[#F7F9F6] rounded-xl">&ldquo;All flashcards reviewed for today!&rdquo;</div>
+              `}
+            </div>
+          ` : ''}
+
+          <!-- SECTION 3: MOCK EXAMS -->
+          ${(activeFilter === 'all' || activeFilter === 'mocks') ? `
+            <div class="terminal-card p-6 space-y-4">
+              <div class="flex justify-between items-center border-b border-[#E4E7E1] pb-3">
+                <div>
+                  <h3 class="text-lg font-bold text-[#18181B]">Mock Exam Tracker &amp; Review Debt</h3>
+                  <p class="text-xs text-[#71717A]">Track scores and enforce 100% review completeness on every mock.</p>
+                </div>
+                <span class="badge-mono badge-sage">${mockStats.count} mocks logged</span>
+              </div>
+              ${(store.state.mocks || []).length === 0 ? `
+                <div class="text-center py-8 text-xs text-[#71717A] font-mono">No mock exams logged yet. Click "+ Log Mock" above when you complete a mock!</div>
+              ` : `
+                <div class="divide-y divide-[#E4E7E1]">
+                  ${store.state.mocks.map(m => `
+                    <div class="py-3 flex items-center justify-between text-xs">
+                      <div>
+                        <div class="font-bold text-[#18181B]">${m.name} (${m.provider})</div>
+                        <div class="text-[#71717A] text-[11px]">${m.date} &bull; S1: ${m.session1Score}% | S2: ${m.session2Score}%</div>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <span class="font-mono font-bold text-sm ${m.score >= 70 ? 'text-[#2E6F40]' : 'text-rose-700'}">${m.score}%</span>
+                        <span class="badge-mono ${m.reviewComplete ? 'badge-sage' : 'badge-rose'}">${m.reviewComplete ? 'Review Done' : 'Debt Pending'}</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    renderWeeklyPlanView() {
+      const planItems = (store.state.weeklyPlan && store.state.weeklyPlan.items) ? store.state.weeklyPlan.items : [];
+      const plannedHours = (store.state.weeklyPlan && store.state.weeklyPlan.targetHoursThisWeek) || 0;
+
+      return `
+        <div class="max-w-7xl mx-auto space-y-6 pb-12">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-5">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#18181B]">Weekly Study Schedule Builder</h1>
+              <p class="text-sm text-[#71717A] mt-0.5">Build your custom 7-day schedule from scratch or auto-generate based on targets.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="btn-add-weekly-task-modal" class="btn-primary text-xs">+ Add Custom Task</button>
+              <button id="btn-auto-gen-week" class="btn-secondary text-xs">&#8635; Auto-Generate Plan</button>
+              <button id="btn-clear-week-scratch" class="btn-secondary text-xs text-rose-700 border-rose-200 hover:bg-rose-50">&#128465; Build from Scratch (Blank)</button>
+            </div>
+          </div>
+
+          <!-- 7-DAY COLUMNS GRID -->
+          <div class="terminal-card p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[#E4E7E1] pb-3">
+              <h3 class="text-lg font-bold text-[#18181B]">Interactive Daily Schedule</h3>
+              <span class="badge-mono badge-sage text-xs font-mono font-bold">${plannedHours} Hours Total Planned</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-7 gap-3">
+              ${DAYS_OF_WEEK.map(day => {
+                const dayTasks = planItems.filter(i => i.day === day);
+                const dayMinutes = dayTasks.reduce((acc, i) => acc + (i.durationMinutes || 0), 0);
+                const dayHours = (dayMinutes / 60).toFixed(1);
+
+                return `
+                  <div class="bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl p-3 flex flex-col justify-between min-h-[220px]">
+                    <div class="space-y-2">
+                      <div class="flex items-center justify-between border-b border-[#E4E7E1] pb-2">
+                        <span class="font-bold text-sm text-[#18181B] font-mono">${day}</span>
+                        <span class="text-[10px] font-mono text-[#71717A] font-semibold">${dayHours}h (${dayMinutes}m)</span>
+                      </div>
+
+                      <div class="space-y-2 mt-2">
+                        ${dayTasks.length === 0 ? `
+                          <div class="text-[11px] text-[#A1A1AA] italic text-center py-4">No tasks</div>
+                        ` : dayTasks.map(task => `
+                          <div class="p-2.5 bg-white border border-[#E4E7E1] rounded-lg text-xs space-y-1.5 relative group shadow-xs">
+                            <div class="flex items-start justify-between gap-1">
+                              <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#18181B] text-[11px]">
+                                <input type="checkbox" class="task-toggle-checkbox rounded text-[#2E6F40]" data-task-id="${task.id}" ${task.done ? 'checked' : ''}>
+                                <span class="${task.done ? 'line-through text-[#A1A1AA]' : ''}">${task.topic}</span>
+                              </label>
+                              <button class="btn-delete-weekly-task text-[#A1A1AA] hover:text-rose-600 text-xs font-bold leading-none" data-task-id="${task.id}">&times;</button>
+                            </div>
+                            <div class="text-[11px] text-[#71717A] ${task.done ? 'line-through text-[#A1A1AA]' : ''}">${task.task}</div>
+                            <div class="flex justify-between text-[10px] font-mono text-[#A1A1AA] pt-1 border-t border-[#F4F4F5]">
+                              <span>${task.durationMinutes} min</span>
+                              <span class="text-[#2E6F40] font-semibold">${task.done ? 'Done' : 'Pending'}</span>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+
+                    <button class="btn-add-task-to-day w-full py-1.5 mt-3 bg-white hover:bg-[#EEF2EC] text-[#18181B] font-semibold text-[11px] rounded-lg border border-[#E4E7E1] flex items-center justify-center gap-1 transition-colors" data-day="${day}">
+                      + Task
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    renderProfileResourcesView() {
+      const profile = store.state.coderProfile || {};
+      const resources = store.state.resources || [];
+
+      return `
+        <div class="max-w-7xl mx-auto space-y-6 pb-12">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-5">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#18181B]">Resources &amp; Profile Hub</h1>
+              <p class="text-sm text-[#71717A] mt-0.5">Primary study links, prep resources &amp; JSON data backup.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button id="btn-export-backup" class="btn-primary text-xs">Export JSON Backup</button>
+            </div>
+          </div>
+
+          <!-- RESOURCES CARD -->
+          <div class="terminal-card p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-[#E4E7E1] pb-3">
+              <h3 class="text-lg font-bold text-[#18181B]">Primary Prep Resources</h3>
+              <span class="badge-mono badge-sage">${resources.length} active links</span>
+            </div>
+            <div class="divide-y divide-[#E4E7E1]">
+              ${resources.map(r => `
+                <div class="py-3 flex items-center justify-between text-xs">
+                  <div>
+                    <a href="${r.url}" target="_blank" class="font-bold text-[#18181B] hover:text-[#2E6F40] flex items-center gap-1.5">
+                      <span>${r.name}</span>
+                      <span class="text-[10px] text-[#A1A1AA] font-mono">&rarr;</span>
+                    </a>
+                    <div class="text-[#71717A] text-[11px]">${r.provider} &bull; ${r.notes}</div>
+                  </div>
+                  <span class="badge-mono badge-sage">${r.type}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- BUILT BY ISHAN NAGPAL CARD (MINIMAL & ZERO FLUFF) -->
+          <div class="terminal-card p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E7E1] pb-4">
+              <div>
+                <div class="text-[10px] font-mono font-bold uppercase text-[#71717A]">DEVELOPER</div>
+                <h3 class="text-xl font-extrabold text-[#18181B]">Built by Ishan Nagpal</h3>
+              </div>
+              <a href="https://linkedin.com/in/ishannagpal07" target="_blank" class="btn-primary text-xs flex items-center gap-2">
+                <span>Connect on LinkedIn</span> &rarr;
+              </a>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <img src="${profile.photo}" alt="${profile.name}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Ishan+Nagpal&background=18181B&color=E2EFE7&bold=true';" class="w-16 h-16 rounded-xl object-cover border border-[#E4E7E1] shadow-xs">
+              <div class="space-y-1">
+                <div class="text-base font-bold font-mono text-[#18181B]">${profile.name}</div>
+                <div class="flex flex-wrap gap-2 pt-1">
+                  <span class="badge-mono badge-sage">HTML5 / Vanilla JS ES6</span>
+                  <span class="badge-mono badge-gray">Apple SF Pro Engine</span>
+                  <span class="badge-mono badge-sage">Let Me Explain 2026/2027</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    attachTabEventListeners() {
+      document.querySelectorAll('.practice-filter-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          this.practiceSubFilter = e.target.getAttribute('data-filter');
+          this.render();
+        });
+      });
+
+      document.getElementById('attempt-selector')?.addEventListener('change', (e) => {
+        store.state.selectedAttemptId = e.target.value;
+        store.save();
+      });
+
+      document.getElementById('btn-start-study-main')?.addEventListener('click', () => this.openTimerModal());
+      document.getElementById('btn-compare-curriculum')?.addEventListener('click', () => this.openCompareModal());
+
+      document.querySelectorAll('.btn-log-lesson-study').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const topic = e.target.getAttribute('data-topic');
+          const module = e.target.getAttribute('data-module');
+          const lesson = e.target.getAttribute('data-lesson');
+          this.openLessonStudyModal(topic, module, lesson);
+        });
+      });
+
+      document.getElementById('btn-log-question-modal')?.addEventListener('click', () => this.openQuestionModal());
+      document.getElementById('btn-add-mistake-modal')?.addEventListener('click', () => this.openMistakeModal());
+      document.getElementById('btn-add-mock-modal')?.addEventListener('click', () => this.openMockModal());
+
+      document.querySelectorAll('.btn-turn-to-flashcard').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const mId = e.target.getAttribute('data-mistake-id');
+          this.openTurnToFlashcardModal(mId);
+        });
+      });
+
+      document.getElementById('btn-show-card-answer')?.addEventListener('click', () => {
+        document.getElementById('card-back')?.classList.remove('hidden');
+        document.getElementById('card-srs-buttons')?.classList.remove('hidden');
+        document.getElementById('btn-show-card-answer')?.classList.add('hidden');
+      });
+
+      document.querySelectorAll('.btn-srs-choice').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const cardId = e.target.getAttribute('data-card-id');
+          const rating = e.target.getAttribute('data-rating');
+          store.answerFlashcard(cardId, rating);
+          this.render();
+        });
+      });
+
+      document.querySelectorAll('.lesson-status-select').forEach(sel => {
+        sel.addEventListener('change', (e) => {
+          const lessonId = e.target.getAttribute('data-lesson-id');
+          const status = e.target.value;
+          if (!store.state.lessonTracking[lessonId]) {
+            store.state.lessonTracking[lessonId] = { status, actualMinutes: 30 };
+          } else {
+            store.state.lessonTracking[lessonId].status = status;
+          }
+          store.save();
+        });
+      });
+
+      // WEEKLY PLAN LISTENERS
+      document.getElementById('btn-add-weekly-task-modal')?.addEventListener('click', () => this.openAddWeeklyTaskModal());
+      document.getElementById('btn-auto-gen-week')?.addEventListener('click', () => { store.autoGenerateWeeklyPlan(); this.render(); });
+      document.getElementById('btn-clear-week-scratch')?.addEventListener('click', () => { if (confirm('Clear all tasks to start your week completely from scratch?')) { store.clearWeeklyPlan(); this.render(); } });
+
+      document.querySelectorAll('.btn-add-task-to-day').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const day = e.target.getAttribute('data-day');
+          this.openAddWeeklyTaskModal(day);
+        });
+      });
+
+      document.querySelectorAll('.task-toggle-checkbox').forEach(chk => {
+        chk.addEventListener('change', (e) => {
+          const taskId = e.target.getAttribute('data-task-id');
+          store.toggleWeeklyTask(taskId);
+          this.render();
+        });
+      });
+
+      document.querySelectorAll('.btn-delete-weekly-task').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const taskId = e.target.getAttribute('data-task-id');
+          store.removeWeeklyTask(taskId);
+          this.render();
+        });
+      });
+
+      document.getElementById('btn-edit-coder')?.addEventListener('click', () => this.openEditCoderModal());
+      document.getElementById('btn-export-backup')?.addEventListener('click', () => this.exportBackup());
+    }
+
+    exportBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(store.state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `CFA_L1_Braindump_Backup_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    openAddWeeklyTaskModal(defaultDay = 'Mon') {
+      const cur = store.getActiveCurriculum();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Add Custom Task to Weekly Plan</h3>
+              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Day of Week</label>
+                  <select id="wpt-day-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                    ${DAYS_OF_WEEK.map(d => `<option value="${d}" ${d === defaultDay ? 'selected' : ''}>${d}</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Duration (Minutes)</label>
+                  <input id="wpt-duration" type="number" value="90" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
+                <select id="wpt-topic-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+                  <option value="Mock Review">Mock Review</option>
+                  <option value="Wall of Shame Clearance">Wall of Shame Clearance</option>
+                  <option value="Revision & Formulae">Revision & Formulae</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Task Goal / Description</label>
+                <input id="wpt-task" type="text" placeholder="e.g. Solve 30 Questions on Bond Duration" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-weekly-task" class="btn-primary">Add Task to ${defaultDay}</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-weekly-task')?.addEventListener('click', () => {
+        const day = document.getElementById('wpt-day-select').value;
+        const topic = document.getElementById('wpt-topic-select').value;
+        const task = document.getElementById('wpt-task').value || 'Custom Study Session';
+        const durationMinutes = parseInt(document.getElementById('wpt-duration').value) || 60;
+        store.addCustomWeeklyTask({ day, topic, task, durationMinutes });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openTimerModal() {
+      const cur = store.getActiveCurriculum();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Start Study Clock &amp; Pomodoro</h3>
+              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+            </div>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Timer Type</label>
+                <div class="grid grid-cols-2 gap-2 font-mono">
+                  <button type="button" id="type-btn-stopwatch" class="timer-type-btn py-2 border border-[#CBD2C8] bg-[#E2EFE7] text-[#1C3E2C] rounded-lg font-bold">⏱ Stopwatch</button>
+                  <button type="button" id="type-btn-pomodoro" class="timer-type-btn py-2 border border-[#E4E7E1] bg-white text-[#71717A] rounded-lg font-bold">🍅 Pomodoro</button>
+                </div>
+              </div>
+
+              <div id="pomo-settings-block" class="hidden p-3 bg-[#F7F9F6] border border-[#E4E7E1] rounded-lg space-y-2">
+                <div class="grid grid-cols-2 gap-2 font-mono">
+                  <div>
+                    <label class="block text-[10px] text-[#71717A] uppercase mb-1">Focus (Mins)</label>
+                    <input id="pomo-focus-mins" type="number" value="25" class="w-full border border-[#E4E7E1] rounded-lg p-1.5 bg-white">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-[#71717A] uppercase mb-1">Break (Mins)</label>
+                    <input id="pomo-break-mins" type="number" value="5" class="w-full border border-[#E4E7E1] rounded-lg p-1.5 bg-white">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
+                <select id="timer-topic-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Activity Choice</label>
+                <select id="timer-activity-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${['LES', 'Reading', 'Questions', 'Flashcards', 'Mock', 'Mock Review', 'Revision', 'Formula Review', 'Ethics Practice', 'Other'].map(a => `<option value="${a}">${a}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-confirm-start-timer" class="btn-primary">Start Timer &rarr;</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      let selectedMode = 'stopwatch';
+      document.getElementById('type-btn-stopwatch')?.addEventListener('click', () => {
+        selectedMode = 'stopwatch';
+        document.getElementById('type-btn-stopwatch').className = 'timer-type-btn py-2 border border-[#CBD2C8] bg-[#E2EFE7] text-[#1C3E2C] rounded-lg font-bold';
+        document.getElementById('type-btn-pomodoro').className = 'timer-type-btn py-2 border border-[#E4E7E1] bg-white text-[#71717A] rounded-lg font-bold';
+        document.getElementById('pomo-settings-block').classList.add('hidden');
+      });
+
+      document.getElementById('type-btn-pomodoro')?.addEventListener('click', () => {
+        selectedMode = 'pomodoro';
+        document.getElementById('type-btn-pomodoro').className = 'timer-type-btn py-2 border border-[#CBD2C8] bg-[#E2EFE7] text-[#1C3E2C] rounded-lg font-bold';
+        document.getElementById('type-btn-stopwatch').className = 'timer-type-btn py-2 border border-[#E4E7E1] bg-white text-[#71717A] rounded-lg font-bold';
+        document.getElementById('pomo-settings-block').classList.remove('hidden');
+      });
+
+      document.getElementById('btn-confirm-start-timer')?.addEventListener('click', () => {
+        const topic = document.getElementById('timer-topic-select').value;
+        const activity = document.getElementById('timer-activity-select').value;
+        const focusMinutes = parseInt(document.getElementById('pomo-focus-mins').value) || 25;
+        const breakMinutes = parseInt(document.getElementById('pomo-break-mins').value) || 5;
+
+        timerManager.startTimer({ mode: selectedMode, topic, activity, focusMinutes, breakMinutes });
+        document.getElementById('modal-container').remove();
+      });
+    }
+
+    openStopTimerModal() {
+      const timeStr = timerManager.getFormattedTime();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Stop &amp; Log Study Session</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="text-center py-3 bg-[#18181B] text-white rounded-lg font-mono">
+              <div class="text-[10px] uppercase text-[#E2EFE7] font-bold">Logged Duration</div>
+              <div class="text-2xl font-bold mt-1">${timeStr}</div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Session Summary Notes</label>
+              <textarea id="stop-timer-notes" rows="3" class="w-full border border-[#E4E7E1] rounded-lg p-2" placeholder="What did you accomplish?"></textarea>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-confirm-stop-timer" class="btn-primary">Save Session</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-confirm-stop-timer')?.addEventListener('click', () => {
+        const notes = document.getElementById('stop-timer-notes').value;
+        timerManager.stopTimer(notes);
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openManualSessionModal() {
+      const cur = store.getActiveCurriculum();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Log Manual Study Session</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
+                <select id="man-topic-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Date</label>
+                  <input id="man-date-input" type="date" value="${new Date().toISOString().split('T')[0]}" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Duration (Minutes)</label>
+                  <input id="man-dur-input" type="number" value="60" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Activity</label>
+                <select id="man-act-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${['LES', 'Reading', 'Questions', 'Flashcards', 'Mock', 'Mock Review', 'Revision', 'Formula Review', 'Ethics Practice', 'Other'].map(a => `<option value="${a}">${a}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-manual-session" class="btn-primary">Add to 300h Counter</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-manual-session')?.addEventListener('click', () => {
+        const topic = document.getElementById('man-topic-select').value;
+        const date = document.getElementById('man-date-input').value;
+        const durationMinutes = parseInt(document.getElementById('man-dur-input').value) || 60;
+        const activity = document.getElementById('man-act-select').value;
+        timerManager.logManualSession({ date, durationMinutes, topic, activity });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openQuestionModal() {
+      const cur = store.getActiveCurriculum();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">One-Tap Question Logger</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
+                <select id="q-topic-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Attempted</label>
+                  <input id="q-att-input" type="number" value="25" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Correct</label>
+                  <input id="q-corr-input" type="number" value="20" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-question-log" class="btn-primary">Save Question Log</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-question-log')?.addEventListener('click', () => {
+        const topic = document.getElementById('q-topic-select').value;
+        const attempted = parseInt(document.getElementById('q-att-input').value) || 0;
+        const correct = parseInt(document.getElementById('q-corr-input').value) || 0;
+        if (!store.state.questionLogs) store.state.questionLogs = [];
+        store.state.questionLogs.unshift({
+          id: 'qlog_' + Date.now(),
+          date: new Date().toISOString().split('T')[0],
+          topic,
+          attempted,
+          correct,
+          incorrect: Math.max(0, attempted - correct)
+        });
+        store.save();
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openMistakeModal() {
+      const cur = store.getActiveCurriculum();
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Add to Wall of Shame</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Question Title</label>
+                <input id="m-title" type="text" placeholder="e.g. YTM Accrued Interest" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
+                <select id="m-topic" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
+                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Why I Got It Wrong</label>
+                <textarea id="m-why" rows="2" class="w-full border border-[#E4E7E1] rounded-lg p-2"></textarea>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Correct Concept</label>
+                <textarea id="m-concept" rows="2" class="w-full border border-[#E4E7E1] rounded-lg p-2"></textarea>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-mistake" class="btn-primary">Save Mistake</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-mistake')?.addEventListener('click', () => {
+        const title = document.getElementById('m-title').value;
+        if (!title) { alert('Enter title'); return; }
+        store.addMistake({
+          questionTitle: title,
+          topic: document.getElementById('m-topic').value,
+          whyWrong: document.getElementById('m-why').value,
+          correctConcept: document.getElementById('m-concept').value
+        });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openTurnToFlashcardModal(mistakeId) {
+      const mistakes = store.state.mistakes || [];
+      const mistake = mistakes.find(m => m.id === mistakeId);
+      if (!mistake) return;
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Convert to Flashcard</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Front</label>
+                <textarea id="fc-front" rows="2" class="w-full border border-[#E4E7E1] rounded-lg p-2">${mistake.questionTitle}</textarea>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Back</label>
+                <textarea id="fc-back" rows="4" class="w-full border border-[#E4E7E1] rounded-lg p-2">Concept: ${mistake.correctConcept}\nWhy wrong: ${mistake.whyWrong}</textarea>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-fc" class="btn-primary">Add Flashcard</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-fc')?.addEventListener('click', () => {
+        store.convertMistakeToFlashcard(mistakeId, document.getElementById('fc-front').value, document.getElementById('fc-back').value);
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openMockModal() {
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Log Mock Exam</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Mock Name</label>
+                <input id="mock-name" type="text" placeholder="e.g. Official Mock 2" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+              </div>
+              <div class="grid grid-cols-3 gap-2 font-mono">
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Total %</label>
+                  <input id="mock-score" type="number" value="75" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">S1 %</label>
+                  <input id="mock-s1" type="number" value="76" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">S2 %</label>
+                  <input id="mock-s2" type="number" value="74" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+                </div>
+              </div>
+              <div>
+                <label class="flex items-center gap-2 cursor-pointer font-sans">
+                  <input id="mock-review-done" type="checkbox" class="rounded">
+                  <span>Mock review completed</span>
+                </label>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-mock" class="btn-primary">Save Mock</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-mock')?.addEventListener('click', () => {
+        store.addMock({
+          name: document.getElementById('mock-name').value || 'Mock Exam',
+          score: document.getElementById('mock-score').value,
+          session1Score: document.getElementById('mock-s1').value,
+          session2Score: document.getElementById('mock-s2').value,
+          reviewComplete: document.getElementById('mock-review-done').checked
+        });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openEditCoderModal() {
+      const profile = store.state.coderProfile || {};
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Edit Builder Profile &amp; Picture</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Name</label>
+                <input id="prof-name" type="text" value="${profile.name || ''}" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">LinkedIn Profile Image / Photo URL</label>
+                <input id="prof-photo" type="text" value="${profile.photo || ''}" placeholder="https://media.licdn.com/..." class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono text-[11px]">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">One Liner</label>
+                <input id="prof-one-liner" type="text" value="${profile.oneLiner || ''}" class="w-full border border-[#E4E7E1] rounded-lg p-2">
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-profile" class="btn-primary">Save Profile &amp; Picture</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-profile')?.addEventListener('click', () => {
+        const photo = document.getElementById('prof-photo').value.trim();
+        store.updateCoderProfile({
+          name: document.getElementById('prof-name').value,
+          photo: photo || 'https://ui-avatars.com/api/?name=Ishan+Nagpal&background=18181B&color=E2EFE7&bold=true',
+          oneLiner: document.getElementById('prof-one-liner').value
+        });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openLessonStudyModal(topic, module, lesson) {
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">Log Study Time</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3">
+              <div class="p-2.5 bg-[#F7F9F6] rounded-lg font-semibold text-[#18181B]">${topic} &rarr; ${lesson}</div>
+              <div>
+                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Duration (Minutes)</label>
+                <input id="l-study-min" type="number" value="30" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button id="btn-save-lesson-study" class="btn-primary">Save Study Time</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('btn-save-lesson-study')?.addEventListener('click', () => {
+        const min = parseInt(document.getElementById('l-study-min').value) || 30;
+        timerManager.logManualSession({ durationMinutes: min, topic, activity: 'LES', notes: `${lesson} study` });
+        document.getElementById('modal-container').remove();
+        this.render();
+      });
+    }
+
+    openCompareModal() {
+      const diff = store.compareCurriculum(2026, 2027);
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-xl w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
+              <h3 class="font-bold text-sm text-[#18181B]">2026 vs 2027 Curriculum Comparison</h3>
+              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+            </div>
+            <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
+              <div>
+                <div class="font-bold text-[#2E6F40] mb-1">&bull; Added Modules in 2027 (${diff.addedModules.length})</div>
+                <ul class="list-disc pl-5 space-y-0.5 text-[#3F3F46]">${diff.addedModules.map(m => `<li>${m}</li>`).join('')}</ul>
+              </div>
+              <div class="pt-2 border-t border-[#E4E7E1]">
+                <div class="font-bold text-amber-800 mb-1">&bull; Added Lessons in 2027 (${diff.addedLessons.length})</div>
+                <ul class="list-disc pl-5 space-y-0.5 text-[#3F3F46]">${diff.addedLessons.slice(0, 10).map(l => `<li>${l}</li>`).join('')}</ul>
+              </div>
+            </div>
+            <div class="flex justify-end border-t border-[#E4E7E1] pt-3">
+              <button onclick="document.getElementById('modal-container').remove()" class="btn-primary">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    openSearchModal() {
+      const modalHtml = `
+        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-start justify-center pt-16 p-4 text-xs">
+          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-xl w-full p-4 space-y-4 shadow-2xl">
+            <div class="flex items-center gap-2 border-b border-[#E4E7E1] pb-2">
+              <svg class="w-4 h-4 text-[#A1A1AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <input id="search-input" type="text" placeholder="Search everything (topics, lessons, questions)..." class="w-full text-sm focus:outline-none text-[#18181B]">
+              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+            </div>
+            <div id="search-results-list" class="max-h-80 overflow-y-auto space-y-2">
+              <div class="text-[#A1A1AA] text-center py-4">Type a query to search...</div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      const input = document.getElementById('search-input');
+      input?.focus();
+
+      input?.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        const list = document.getElementById('search-results-list');
+        if (!q) {
+          list.innerHTML = `<div class="text-[#A1A1AA] text-center py-4">Type a query to search...</div>`;
+          return;
+        }
+
+        const cur = store.getActiveCurriculum();
+        const matches = [];
+        cur.topics.forEach(t => {
+          if (t.name.toLowerCase().includes(q)) matches.push({ type: 'Topic', title: t.name });
+          t.modules.forEach(m => {
+            m.lessons.forEach(l => {
+              if (l.name.toLowerCase().includes(q)) matches.push({ type: 'Lesson', title: l.name, detail: t.name });
+            });
+          });
+        });
+        (store.state.mistakes || []).forEach(m => {
+          if (m.questionTitle.toLowerCase().includes(q) || m.whyWrong.toLowerCase().includes(q)) {
+            matches.push({ type: 'Mistake', title: m.questionTitle, detail: m.topic });
+          }
+        });
+
+        if (matches.length === 0) {
+          list.innerHTML = `<div class="text-[#71717A] text-center py-4">No results found for "${q}"</div>`;
+        } else {
+          list.innerHTML = matches.map(m => `
+            <div class="p-2.5 bg-[#F7F9F6] rounded-lg border border-[#E4E7E1] flex justify-between items-center">
+              <span class="font-semibold text-[#18181B]">${m.title}</span>
+              <span class="badge-mono badge-sage text-[10px]">${m.type}</span>
+            </div>
+          `).join('');
+        }
+      });
+    }
+  }
+
+  // --- 5. INITIALIZATION ---
+  function startApp() {
+    window.app = new App();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startApp);
+  } else {
+    startApp();
+  }
+})();
+
+</script>
 </body>
 </html>
