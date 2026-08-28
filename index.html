@@ -280,7 +280,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
       <div class="space-y-6">
         <!-- Brand Header & Collapse Sidebar Button -->
         <div class="flex items-center justify-between gap-2">
-          <div class="space-y-0.5 cursor-pointer sidebar-brand-text" data-tab="control_room">
+          <div class="space-y-0.5 cursor-pointer sidebar-brand-text" data-tab="control_room" onclick="window.app &amp;&amp; window.app.switchTab('control_room')">
             <div class="font-extrabold text-base tracking-tight font-mono text-[#18181B]">CFA L1 // BRAINDUMP</div>
             <div class="text-[11px] font-mono font-semibold text-[#A1A1AA] uppercase tracking-wider">PERSONAL STUDY OS</div>
           </div>
@@ -289,29 +289,29 @@ body.sidebar-collapsed #btn-expand-sidebar {
           </button>
         </div>
 
-        <!-- Sidebar Navigation Menu (5 Coupled Hubs with Crisp SVG Icons) -->
+        <!-- Sidebar Navigation Menu (5 Coupled Hubs with Dual Redundancy) -->
         <nav class="space-y-1">
-          <button class="sidebar-nav-btn active" data-tab="control_room">
+          <button class="sidebar-nav-btn active" data-tab="control_room" onclick="window.app &amp;&amp; window.app.switchTab('control_room')">
             <svg class="w-5 h-5 text-[#2E6F40] sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             <span class="sidebar-text">Home</span>
           </button>
 
-          <button class="sidebar-nav-btn" data-tab="curriculum">
+          <button class="sidebar-nav-btn" data-tab="curriculum" onclick="window.app &amp;&amp; window.app.switchTab('curriculum')">
             <svg class="w-5 h-5 text-[#71717A] sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             <span class="sidebar-text">Curriculum &amp; LES</span>
           </button>
 
-          <button class="sidebar-nav-btn" data-tab="practice">
+          <button class="sidebar-nav-btn" data-tab="practice" onclick="window.app &amp;&amp; window.app.switchTab('practice')">
             <svg class="w-5 h-5 text-[#71717A] sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             <span class="sidebar-text">Practice &amp; Review</span>
           </button>
 
-          <button class="sidebar-nav-btn" data-tab="weekly_plan">
+          <button class="sidebar-nav-btn" data-tab="weekly_plan" onclick="window.app &amp;&amp; window.app.switchTab('weekly_plan')">
             <svg class="w-5 h-5 text-[#71717A] sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             <span class="sidebar-text">Weekly Plan</span>
           </button>
 
-          <button class="sidebar-nav-btn" data-tab="profile">
+          <button class="sidebar-nav-btn" data-tab="profile" onclick="window.app &amp;&amp; window.app.switchTab('profile')">
             <svg class="w-5 h-5 text-[#71717A] sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
             <span class="sidebar-text">Resources &amp; Profile</span>
           </button>
@@ -356,7 +356,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
         </div>
       </header>
 
-      <!-- Main Content Container with Pre-rendered HTML -->
+      <!-- Main Content Container -->
       <main id="app-main-content" class="p-6 sm:p-8 flex-1 tab-content-fade">
         <div class="max-w-7xl mx-auto space-y-8 pb-12">
           <!-- Page Title Block -->
@@ -456,7 +456,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
                 <!-- OPTIONAL REVIEW SECTION -->
                 <div class="space-y-2">
                   <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">OPTIONAL REVIEW</div>
-                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice">
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice" onclick="window.app &amp;&amp; window.app.switchTab('practice')">
                     <div class="font-bold text-xs text-[#18181B]">
                       1 flashcard card due
                     </div>
@@ -485,23 +485,23 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
   <!-- Mobile Bottom Bar -->
   <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E4E7E1] flex justify-around py-2 z-40 font-mono text-[10px] font-bold text-[#71717A]">
-    <button class="flex flex-col items-center py-1" data-tab="control_room">
+    <button class="flex flex-col items-center py-1" data-tab="control_room" onclick="window.app &amp;&amp; window.app.switchTab('control_room')">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 001 1m-6 0h6"></path></svg>
       <span>Home</span>
     </button>
-    <button class="flex flex-col items-center py-1" data-tab="curriculum">
+    <button class="flex flex-col items-center py-1" data-tab="curriculum" onclick="window.app &amp;&amp; window.app.switchTab('curriculum')">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
       <span>Curriculum</span>
     </button>
-    <button class="flex flex-col items-center py-1" data-tab="practice">
+    <button class="flex flex-col items-center py-1" data-tab="practice" onclick="window.app &amp;&amp; window.app.switchTab('practice')">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
       <span>Practice</span>
     </button>
-    <button class="flex flex-col items-center py-1" data-tab="weekly_plan">
+    <button class="flex flex-col items-center py-1" data-tab="weekly_plan" onclick="window.app &amp;&amp; window.app.switchTab('weekly_plan')">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       <span>Plan</span>
     </button>
-    <button class="flex flex-col items-center py-1" data-tab="profile">
+    <button class="flex flex-col items-center py-1" data-tab="profile" onclick="window.app &amp;&amp; window.app.switchTab('profile')">
       <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
       <span>Profile</span>
     </button>
@@ -1237,7 +1237,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
   ];
 
   // --- 2. STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v16';
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v17';
 
   const safeStorage = {
     getItem(key) {
@@ -1597,47 +1597,42 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
         mainContainer.className = 'p-6 sm:p-8 flex-1 tab-content-fade';
 
+        let htmlContent = '';
         switch (this.currentTab) {
           case 'control_room':
           case 'home':
-            mainContainer.innerHTML = this.renderControlRoom();
+            try { htmlContent = this.renderControlRoom(); } catch(e) { console.error('Control room render error:', e); htmlContent = this.renderControlRoom(); }
             break;
 
           case 'curriculum':
-            mainContainer.innerHTML = this.renderCurriculumLES();
+            try { htmlContent = this.renderCurriculumLES(); } catch(e) { console.error('Curriculum render error:', e); }
             break;
 
           case 'practice':
-            mainContainer.innerHTML = this.renderPracticeLab();
+            try { htmlContent = this.renderPracticeLab(); } catch(e) { console.error('Practice render error:', e); }
             break;
 
           case 'weekly_plan':
-            mainContainer.innerHTML = this.renderWeeklyPlanView();
+            try { htmlContent = this.renderWeeklyPlanView(); } catch(e) { console.error('Weekly plan render error:', e); }
             break;
 
           case 'profile':
           case 'resources':
-            mainContainer.innerHTML = this.renderProfileResourcesView();
+            try { htmlContent = this.renderProfileResourcesView(); } catch(e) { console.error('Profile render error:', e); }
             break;
 
           default:
-            mainContainer.innerHTML = this.renderControlRoom();
+            htmlContent = this.renderControlRoom();
+        }
+
+        if (htmlContent) {
+          mainContainer.innerHTML = htmlContent;
         }
 
         this.updateActiveTabStyles();
         this.attachTabEventListeners();
       } catch (err) {
         console.error('Render error caught cleanly:', err);
-        const mainContainer = document.getElementById('app-main-content');
-        if (mainContainer) {
-          mainContainer.innerHTML = `
-            <div class="p-8 bg-white border border-[#E4E7E1] rounded-2xl text-center space-y-4 max-w-md mx-auto my-12 shadow-sm">
-              <div class="text-2xl font-bold font-mono text-[#18181B]">CFA L1 // Braindump</div>
-              <p class="text-xs text-[#71717A]">Application state has been safely recovered.</p>
-              <button onclick="localStorage.clear(); location.reload();" class="btn-primary text-xs w-full py-2.5 flex justify-center">Reset &amp; Reload Fresh State</button>
-            </div>
-          `;
-        }
       }
     }
 
@@ -2879,11 +2874,15 @@ body.sidebar-collapsed #btn-expand-sidebar {
 
   // --- 5. INITIALIZATION ---
   function startApp() {
-    window.app = new App();
+    if (!window.app) {
+      window.app = new App();
+    }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startApp);
+  window.app = new App();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startApp);
   } else {
     startApp();
   }
