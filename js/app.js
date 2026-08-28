@@ -1,14 +1,18 @@
-// ==========================================
-// CFA Level I: Braindump Standalone App Bundle v12
-// 100% Complete & Pristine Execution
-// ==========================================
+// =========================================================
+// CFA Level I: Braindump - Standalone App Bundle v21 (FLAWLESS)
+// =========================================================
 
 (function() {
   'use strict';
 
   function escapeHtml(str) {
     if (!str) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   // --- 1. SEED DATA ---
@@ -141,7 +145,7 @@
             lessons: [
               { id: 'q26_l4_1', name: 'Expected value and variance', sourceDurationMinutes: 12, sourceAccess: 'Pro' },
               { id: 'q26_l4_2', name: 'Probability trees and conditional expectations', sourceDurationMinutes: 20, sourceAccess: 'Pro' },
-              { id: 'q26_l4_3', name: 'Bayes’ formula', sourceDurationMinutes: 21, sourceAccess: 'Pro' }
+              { id: 'q26_l4_3', name: 'Bayes formula', sourceDurationMinutes: 21, sourceAccess: 'Pro' }
             ]
           },
           {
@@ -730,20 +734,20 @@
     }
   ];
 
-  // --- 2. STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v20';
+  // --- 2. SAFE STORAGE & STORE ---
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v21';
 
   const safeStorage = {
     getItem(key) {
       try {
-        return safeStorage.getItem(key);
+        return localStorage.getItem(key);
       } catch (e) {
         return null;
       }
     },
     setItem(key, val) {
       try {
-        safeStorage.setItem(key, val);
+        localStorage.setItem(key, val);
       } catch (e) {
         console.warn('Storage unavailable:', e);
       }
@@ -756,7 +760,7 @@
       selectedAttemptId: 'nov_2026',
       mockTimeCountsToward300: true,
       coderProfile: {
-        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80'',
+        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
         name: 'Ishan Nagpal',
         role: 'Architect & Lead System Developer',
         linkedin: 'https://linkedin.com/in/ishannagpal07',
@@ -824,9 +828,375 @@
 
   class Store {
     constructor() {
-      window.app = this;
-      this.currentTab = 'control_room';
-      this.practiceSubFilter = 'all';
+      this.state = this.load();
+      this.listeners = [];
+    }
+
+    load() {
+      try {
+        const stored = safeStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const initial = getInitialState();
+          return {
+            ...initial,
+            ...parsed,
+            coderProfile: { ...initial.coderProfile, ...(parsed.coderProfile || {}) },
+            weeklyPlan: {
+              generatedDate: (parsed.weeklyPlan && parsed.weeklyPlan.generatedDate) || initial.weeklyPlan.generatedDate,
+              targetHoursThisWeek: (parsed.weeklyPlan && parsed.weeklyPlan.targetHoursThisWeek) || initial.weeklyPlan.targetHoursThisWeek,
+              items: (parsed.weeklyPlan && Array.isArray(parsed.weeklyPlan.items)) ? parsed.weeklyPlan.items : initial.weeklyPlan.items
+            },
+            flashcards: Array.isArray(parsed.flashcards) ? parsed.flashcards.map(f => ({ ...f, front: f.front || '', back: f.back || '' })) : initial.flashcards,
+            mistakes: Array.isArray(parsed.mistakes) ? parsed.mistakes : initial.mistakes,
+            mocks: Array.isArray(parsed.mocks) ? parsed.mocks : initial.mocks,
+            resources: Array.isArray(parsed.resources) ? parsed.resources : initial.resources,
+            studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : initial.studySessions,
+            lessonTracking: (parsed.lessonTracking && typeof parsed.lessonTracking === 'object') ? parsed.lessonTracking : {}
+          };
+        }
+      } catch (e) {
+        console.error('Failed to load store, resetting state:', e);
+      }
+      return getInitialState();
+    }
+
+    save() {
+      try {
+        safeStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        this.notify();
+      } catch (e) {
+        console.error('Failed to save store:', e);
+      }
+    }
+
+    subscribe(listener) {
+      this.listeners.push(listener);
+      return () => {
+        this.listeners = this.listeners.filter(l => l !== listener);
+      };
+    }
+
+    notify() {
+      this.listeners.forEach(l => l(this.state));
+    }
+
+    getCurriculum(year) {
+      return year === 2027 ? CURRICULUM_2027 : CURRICULUM_2026;
+    }
+
+    getActiveAttempt() {
+      return EXAM_ATTEMPTS.find(a => a.id === this.state.selectedAttemptId) || EXAM_ATTEMPTS[0];
+    }
+
+    getActiveCurriculum() {
+      return this.getCurriculum(this.getActiveAttempt().curriculumYear);
+    }
+
+    getStudyStats() {
+      const sessions = (this.state.studySessions || []).filter(s => s.countsToward300);
+      const totalSeconds = sessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0);
+      const completedHours = totalSeconds / 3600;
+      const targetHours = 300;
+      const remainingHours = Math.max(0, targetHours - completedHours);
+      const percentage = Math.min(100, (completedHours / targetHours) * 100);
+
+      const attempt = this.getActiveAttempt();
+      const startDate = new Date(attempt.prepStartDate);
+      const examDate = new Date(attempt.examDate);
+      const today = new Date();
+
+      const totalDays = Math.max(1, (examDate - startDate) / (86400 * 1000));
+      const elapsedDays = Math.max(0, (today - startDate) / (86400 * 1000));
+      const expectedHoursByToday = (targetHours / totalDays) * elapsedDays;
+
+      const diffHours = completedHours - expectedHoursByToday;
+      const aheadMinutes = Math.round(Math.abs(diffHours) * 60);
+      const aheadH = Math.floor(aheadMinutes / 60);
+      const aheadM = aheadMinutes % 60;
+      const paceStatus = diffHours >= 0 
+        ? `${aheadH}h ${aheadM}m ahead of pace` 
+        : `${aheadH}h ${aheadM}m behind pace`;
+
+      const daysRemaining = Math.max(0, Math.ceil((examDate - today) / (86400 * 1000)));
+
+      const todayStr = today.toISOString().split('T')[0];
+      const todaySessions = sessions.filter(s => s.date === todayStr);
+      const todaySeconds = todaySessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0);
+
+      return {
+        totalSeconds,
+        completedHours,
+        targetHours,
+        remainingHours,
+        percentage,
+        expectedHoursByToday,
+        paceStatus,
+        daysRemaining,
+        todaySeconds,
+        todayHoursFormatted: this.formatSeconds(todaySeconds),
+        totalHoursFormatted: this.formatSeconds(totalSeconds)
+      };
+    }
+
+    formatSeconds(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      if (h > 0 && m > 0) return `${h}h ${m}m`;
+      if (h > 0) return `${h}h 00m`;
+      return `0h ${m}m`;
+    }
+
+    getPlannedHoursForTopic(topicName) {
+      const cur = this.getActiveCurriculum();
+      const topic = cur.topics.find(t => t.name === topicName);
+      if (!topic) return 30;
+
+      const totalWeight = cur.topics.reduce((acc, t) => acc + (TOPIC_WEIGHTS[t.name] || 8), 0);
+      const topicWeight = TOPIC_WEIGHTS[topicName] || 8;
+      const baseHours = (topicWeight / totalWeight) * 300;
+
+      const logs = (this.state.questionLogs || []).filter(q => q.topic === topicName);
+      let weaknessMultiplier = 1.0;
+      if (logs.length > 0) {
+        const totalAtt = logs.reduce((acc, q) => acc + q.attempted, 0);
+        const totalCorr = logs.reduce((acc, q) => acc + q.correct, 0);
+        const acc = totalAtt > 0 ? (totalCorr / totalAtt) : 0.75;
+        if (acc < 0.65) weaknessMultiplier = 1.15;
+        else if (acc > 0.85) weaknessMultiplier = 0.90;
+      }
+
+      return Math.round(baseHours * weaknessMultiplier);
+    }
+
+    getLESStats() {
+      const cur = this.getActiveCurriculum();
+      let totalLessons = 0;
+      let completedLessons = 0;
+      let totalSourceMinutes = 0;
+
+      cur.topics.forEach(t => {
+        t.modules.forEach(m => {
+          m.lessons.forEach(l => {
+            totalLessons++;
+            totalSourceMinutes += (l.sourceDurationMinutes || 0);
+            const track = (this.state.lessonTracking || {})[l.id];
+            if (track && (track.status === 'Completed' || track.status === 'Mastered')) {
+              completedLessons++;
+            }
+          });
+        });
+      });
+
+      const completionPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+      return { totalLessons, completedLessons, totalSourceMinutes, completionPercentage };
+    }
+
+    getQuestionStats() {
+      const logs = this.state.questionLogs || [];
+      const totalAttempted = logs.reduce((acc, q) => acc + (q.attempted || 0), 0);
+      const totalCorrect = logs.reduce((acc, q) => acc + (q.correct || 0), 0);
+      const accuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : 0;
+      return { totalAttempted, totalCorrect, accuracy };
+    }
+
+    getMockStats() {
+      const mocks = this.state.mocks || [];
+      if (mocks.length === 0) return { count: 0, average: '—', reviewDebt: 0 };
+      const avgScore = Math.round(mocks.reduce((acc, m) => acc + m.score, 0) / mocks.length);
+      const reviewDebt = mocks.filter(m => !m.reviewComplete).length;
+      return { count: mocks.length, average: `${avgScore}%`, reviewDebt };
+    }
+
+    addCustomWeeklyTask({ day, topic, task, durationMinutes }) {
+      const newTask = {
+        id: 'wpt_' + Date.now() + Math.random().toString(36).substring(2, 5),
+        day: day || 'Mon',
+        topic: topic || 'Quantitative Methods',
+        task: task || 'Custom Study Session',
+        durationMinutes: parseInt(durationMinutes) || 60,
+        done: false
+      };
+      if (!this.state.weeklyPlan.items) this.state.weeklyPlan.items = [];
+      this.state.weeklyPlan.items.push(newTask);
+      this.recalculateWeeklyPlanHours();
+      this.save();
+      return newTask;
+    }
+
+    removeWeeklyTask(taskId) {
+      if (!this.state.weeklyPlan.items) return;
+      this.state.weeklyPlan.items = this.state.weeklyPlan.items.filter(i => i.id !== taskId);
+      this.recalculateWeeklyPlanHours();
+      this.save();
+    }
+
+    toggleWeeklyTask(taskId) {
+      if (!this.state.weeklyPlan.items) return;
+      const item = this.state.weeklyPlan.items.find(i => i.id === taskId);
+      if (item) {
+        item.done = !item.done;
+        this.save();
+      }
+    }
+
+    clearWeeklyPlan() {
+      this.state.weeklyPlan.items = [];
+      this.state.weeklyPlan.targetHoursThisWeek = 0;
+      this.save();
+    }
+
+    autoGenerateWeeklyPlan() {
+      const defaultTasks = [
+        { id: 'wpt_1', day: 'Mon', topic: 'Fixed Income', task: 'LM3 Bond Valuation & YTM Questions', durationMinutes: 120, done: false },
+        { id: 'wpt_2', day: 'Tue', topic: 'Financial Statement Analysis', task: 'LM5 DuPont Analysis & Ratios', durationMinutes: 150, done: false },
+        { id: 'wpt_3', day: 'Wed', topic: 'Quantitative Methods', task: 'LM8 Hypothesis Testing Review', durationMinutes: 120, done: false },
+        { id: 'wpt_4', day: 'Thu', topic: 'Ethics and Professional Standards', task: 'Standard III Duties to Clients (20 Questions)', durationMinutes: 90, done: false },
+        { id: 'wpt_5', day: 'Fri', topic: 'Corporate Issuers', task: 'LM2 WACC & Capital Structure', durationMinutes: 120, done: false },
+        { id: 'wpt_6', day: 'Sat', topic: 'Fixed Income & FSA', task: 'Wall of Shame Mistake Card Clearance (15 cards)', durationMinutes: 180, done: false },
+        { id: 'wpt_7', day: 'Sun', topic: 'Mock Review', task: 'Complete Schweser Mock 2 Review Debt', durationMinutes: 150, done: false }
+      ];
+      this.state.weeklyPlan.items = defaultTasks;
+      this.recalculateWeeklyPlanHours();
+      this.save();
+    }
+
+    recalculateWeeklyPlanHours() {
+      const items = this.state.weeklyPlan.items || [];
+      const totalMinutes = items.reduce((acc, i) => acc + (i.durationMinutes || 0), 0);
+      this.state.weeklyPlan.targetHoursThisWeek = Math.round((totalMinutes / 60) * 10) / 10;
+    }
+
+    addMistake(mistakeData) {
+      const newMistake = {
+        id: "mistake_" + Date.now(),
+        date: new Date().toISOString().split("T")[0],
+        source: mistakeData.source || "Practice Question",
+        questionTitle: mistakeData.questionTitle,
+        topic: mistakeData.topic,
+        whyWrong: mistakeData.whyWrong,
+        correctConcept: mistakeData.correctConcept,
+        formula: mistakeData.formula || "",
+        trap: mistakeData.trap || "",
+        status: "New"
+      };
+
+      if (!this.state.mistakes) this.state.mistakes = [];
+      this.state.mistakes.unshift(newMistake);
+      this.save();
+      return newMistake;
+    }
+
+    convertMistakeToFlashcard(mistakeId, frontOverride, backOverride) {
+      const mistakes = this.state.mistakes || [];
+      const mistake = mistakes.find(m => m.id === mistakeId);
+      if (!mistake) return;
+
+      const front = frontOverride || `[${mistake.topic}] ${mistake.questionTitle}`;
+      const back = backOverride || `Correct Concept: ${mistake.correctConcept}\nWhy Wrong: ${mistake.whyWrong}${mistake.formula ? '\nFormula: ' + mistake.formula : ''}`;
+
+      const newCard = {
+        id: "card_" + Date.now(),
+        mistakeId: mistake.id,
+        topic: mistake.topic,
+        front,
+        back,
+        interval: 1,
+        ease: 2.5,
+        nextReview: new Date().toISOString().split("T")[0],
+        status: "Due"
+      };
+
+      if (!this.state.flashcards) this.state.flashcards = [];
+      this.state.flashcards.unshift(newCard);
+      mistake.status = "Reviewed";
+      this.save();
+      return newCard;
+    }
+
+    addMock(mockData) {
+      const newMock = {
+        id: "mock_" + Date.now(),
+        date: mockData.date || new Date().toISOString().split("T")[0],
+        provider: mockData.provider || "CFA Institute",
+        name: mockData.name || "Mock Exam",
+        score: parseInt(mockData.score) || 75,
+        session1Score: parseInt(mockData.session1Score) || 75,
+        session2Score: parseInt(mockData.session2Score) || 75,
+        reviewComplete: mockData.reviewComplete === true,
+        notes: mockData.notes || "Completed mock exam session."
+      };
+
+      if (!this.state.mocks) this.state.mocks = [];
+      this.state.mocks.unshift(newMock);
+      this.save();
+      return newMock;
+    }
+
+    updateCoderProfile(profileData) {
+      this.state.coderProfile = {
+        ...this.state.coderProfile,
+        ...profileData
+      };
+      this.save();
+    }
+
+    answerFlashcard(cardId, rating) {
+      const flashcards = this.state.flashcards || [];
+      const card = flashcards.find(f => f.id === cardId);
+      if (!card) return;
+
+      let { interval, ease } = card;
+      if (rating === "again") {
+        interval = 1;
+        ease = Math.max(1.3, ease - 0.2);
+      } else if (rating === "hard") {
+        interval = Math.max(1, Math.round(interval * 1.2));
+        ease = Math.max(1.3, ease - 0.15);
+      } else if (rating === "good") {
+        interval = Math.round(interval * ease);
+      } else if (rating === "easy") {
+        interval = Math.round(interval * ease * 1.3);
+        ease += 0.15;
+      }
+
+      const nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + interval);
+      card.nextReview = nextDate.toISOString().split("T")[0];
+      card.interval = interval;
+      card.ease = ease;
+      card.status = rating === "easy" && interval > 14 ? "Mastered" : "Due";
+
+      this.save();
+    }
+
+    compareCurriculum(yearA = 2026, yearB = 2027) {
+      const curA = this.getCurriculum(yearA);
+      const curB = this.getCurriculum(yearB);
+
+      const result = { addedModules: [], removedModules: [], addedLessons: [], removedLessons: [] };
+      const modulesA = new Set(curA.topics.flatMap(t => t.modules.map(m => m.name)));
+      const modulesB = new Set(curB.topics.flatMap(t => t.modules.map(m => m.name)));
+
+      modulesB.forEach(mName => { if (!modulesA.has(mName)) result.addedModules.push(mName); });
+      modulesA.forEach(mName => { if (!modulesB.has(mName)) result.removedModules.push(mName); });
+
+      const lessonsA = new Set(curA.topics.flatMap(t => t.modules.flatMap(m => m.lessons.map(l => l.name))));
+      const lessonsB = new Set(curB.topics.flatMap(t => t.modules.flatMap(m => m.lessons.map(l => l.name))));
+
+      lessonsB.forEach(lName => { if (!lessonsA.has(lName)) result.addedLessons.push(lName); });
+      lessonsA.forEach(lName => { if (!lessonsB.has(lName)) result.removedLessons.push(lName); });
+
+      return result;
+    }
+  }
+
+  const store = new Store();
+
+  // --- 3. TIMER MANAGER CLASS ---
+  class TimerManager {
+    constructor() {
+      this.intervalId = null;
       this.init();
     }
 
@@ -875,12 +1245,16 @@
                 timer.completedPomodoros = (timer.completedPomodoros || 0) + 1;
                 timer.startTimestamp = Date.now();
                 timer.elapsedSeconds = 0;
-                alert(`🍅 Pomodoro Focus Complete! Take a ${timer.breakSecondsTotal / 60}-minute break.`);
+                if (typeof alert !== 'undefined') {
+                  alert(`🍅 Pomodoro Focus Complete! Take a ${timer.breakSecondsTotal / 60}-minute break.`);
+                }
               } else {
                 timer.phase = 'focus';
                 timer.startTimestamp = Date.now();
                 timer.elapsedSeconds = 0;
-                alert(`⚡ Break Complete! Ready for your next Pomodoro focus cycle?`);
+                if (typeof alert !== 'undefined') {
+                  alert(`⚡ Break Complete! Ready for your next Pomodoro focus cycle?`);
+                }
               }
             }
           }
@@ -956,6 +1330,26 @@
       store.save();
     }
 
+    logManualSession({ date, durationMinutes, topic, activity, notes = "" }) {
+      const durationSeconds = (parseInt(durationMinutes) || 60) * 60;
+      const now = new Date();
+      const newSession = {
+        id: "sess_man_" + Date.now(),
+        attemptId: store.state.selectedAttemptId,
+        date: date || now.toISOString().split("T")[0],
+        startTime: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        endTime: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        durationSeconds,
+        topic: topic || "General Study",
+        activity: activity || "LES",
+        countsToward300: true,
+        note: notes || `Manual study entry`
+      };
+      if (!store.state.studySessions) store.state.studySessions = [];
+      store.state.studySessions.unshift(newSession);
+      store.save();
+    }
+
     getFormattedTime() {
       if (!store.state.activeTimer) return "00:00:00";
       const timer = store.state.activeTimer;
@@ -979,6 +1373,7 @@
   // --- 4. APP VIEW MANAGER CLASS ---
   class App {
     constructor() {
+      window.app = this;
       this.currentTab = 'control_room';
       this.practiceSubFilter = 'all';
       this.init();
@@ -1010,25 +1405,21 @@
       } catch (e) {}
     }
 
-    toggleSidebarCollapse() {
-      document.body.classList.toggle('sidebar-collapsed');
-      const collapsedNow = document.body.classList.contains('sidebar-collapsed');
-      safeStorage.setItem('cfa_sidebar_collapsed', collapsedNow);
-    }
-
     bindGlobalEvents() {
       document.getElementById('btn-toggle-sidebar')?.addEventListener('click', () => this.toggleSidebarCollapse());
       document.getElementById('btn-expand-sidebar')?.addEventListener('click', () => this.toggleSidebarCollapse());
 
-      window.addEventListener('keydown', (e) => {
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-        const key = e.key.toUpperCase();
-        if (key === 'S') { e.preventDefault(); this.openTimerModal(); }
-        else if (key === 'Q') { e.preventDefault(); this.openQuestionModal(); }
-        else if (key === 'M') { e.preventDefault(); this.openMockModal(); }
-        else if (key === 'F') { e.preventDefault(); this.switchTab('practice'); }
-        else if (e.key === '/') { e.preventDefault(); this.openSearchModal(); }
-      });
+      if (typeof window !== 'undefined') {
+        window.addEventListener('keydown', (e) => {
+          if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+          const key = e.key.toUpperCase();
+          if (key === 'S') { e.preventDefault(); this.openTimerModal(); }
+          else if (key === 'Q') { e.preventDefault(); this.openQuestionModal(); }
+          else if (key === 'M') { e.preventDefault(); this.openMockModal(); }
+          else if (key === 'F') { e.preventDefault(); this.switchTab('practice'); }
+          else if (e.key === '/') { e.preventDefault(); this.openSearchModal(); }
+        });
+      }
 
       document.addEventListener('click', (e) => {
         const tabBtn = e.target.closest('[data-tab]');
@@ -1065,20 +1456,35 @@
     }
 
     switchTab(tabId) {
-      this.currentTab = tabId;
-      this.render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        this.currentTab = tabId;
+        this.render();
+        if (typeof window !== 'undefined' && window.scrollTo) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } catch (e) {
+        console.error('switchTab error:', e);
+      }
     }
 
     updateActiveTabStyles() {
-      const activeTab = this.currentTab;
-      document.querySelectorAll('[data-tab]').forEach(btn => {
-        if (btn.getAttribute('data-tab') === activeTab) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
+      try {
+        const activeTab = this.currentTab;
+        document.querySelectorAll('[data-tab]').forEach(btn => {
+          const btnTab = btn.getAttribute('data-tab');
+          if (
+            btnTab === activeTab ||
+            (activeTab === 'control_room' && btnTab === 'home') ||
+            (activeTab === 'home' && btnTab === 'control_room') ||
+            (activeTab === 'profile' && btnTab === 'resources') ||
+            (activeTab === 'resources' && btnTab === 'profile')
+          ) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      } catch (e) {}
     }
 
     render() {
@@ -1260,7 +1666,7 @@
                 <!-- OPTIONAL REVIEW SECTION -->
                 <div class="space-y-2">
                   <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">OPTIONAL REVIEW</div>
-                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice">
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice" onclick="window.app &amp;&amp; window.app.switchTab('practice')">
                     <div class="font-bold text-xs text-[#18181B]">
                       ${dueCards.length > 0 ? `${dueCards.length} flashcard cards due` : 'No cards due'}
                     </div>
@@ -1332,7 +1738,7 @@
 
                 return `
                   <div class="topic-row hover:bg-[#F7F9F6] transition-colors">
-                    <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer" onclick="document.getElementById('topic-detail-${t.id}').classList.toggle('hidden')">
+                    <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer" onclick="var el = document.getElementById('topic-detail-${t.id}'); if(el) el.classList.toggle('hidden');">
                       <div class="flex items-center gap-3">
                         <span class="font-mono text-xs font-bold text-[#A1A1AA]">${String(idx + 1).padStart(2, '0')}.</span>
                         <div class="font-bold text-sm text-[#18181B]">${t.name}</div>
@@ -1366,7 +1772,7 @@
                                         <option value="${s}" ${track.status === s ? 'selected' : ''}>${s}</option>
                                       `).join('')}
                                     </select>
-                                    <button class="btn-secondary text-[11px] py-1 px-2.5 btn-log-lesson-study" data-topic="${t.name}" data-module="${m.name}" data-lesson="${l.name}">
+                                    <button class="btn-secondary text-[11px] py-1 px-2.5 btn-log-lesson-study" data-topic="${escapeHtml(t.name)}" data-module="${escapeHtml(m.name)}" data-lesson="${escapeHtml(l.name)}">
                                       + Study Time
                                     </button>
                                   </div>
@@ -1731,7 +2137,12 @@
       // WEEKLY PLAN LISTENERS
       document.getElementById('btn-add-weekly-task-modal')?.addEventListener('click', () => this.openAddWeeklyTaskModal());
       document.getElementById('btn-auto-gen-week')?.addEventListener('click', () => { store.autoGenerateWeeklyPlan(); this.render(); });
-      document.getElementById('btn-clear-week-scratch')?.addEventListener('click', () => { if (confirm('Clear all tasks to start your week completely from scratch?')) { store.clearWeeklyPlan(); this.render(); } });
+      document.getElementById('btn-clear-week-scratch')?.addEventListener('click', () => { 
+        if (typeof confirm === 'undefined' || confirm('Clear all tasks to start your week completely from scratch?')) { 
+          store.clearWeeklyPlan(); 
+          this.render(); 
+        } 
+      });
 
       document.querySelectorAll('.btn-add-task-to-day').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -1777,7 +2188,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Add Custom Task to Weekly Plan</h3>
-              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
             </div>
             <div class="space-y-3">
               <div class="grid grid-cols-2 gap-3">
@@ -1807,7 +2218,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-weekly-task" class="btn-primary">Add Task to ${defaultDay}</button>
             </div>
           </div>
@@ -1820,7 +2231,8 @@
         const task = document.getElementById('wpt-task').value || 'Custom Study Session';
         const durationMinutes = parseInt(document.getElementById('wpt-duration').value) || 60;
         store.addCustomWeeklyTask({ day, topic, task, durationMinutes });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -1832,7 +2244,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Start Study Clock &amp; Pomodoro</h3>
-              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
             </div>
             
             <div class="space-y-3">
@@ -1872,7 +2284,7 @@
             </div>
 
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-confirm-start-timer" class="btn-primary">Start Timer &rarr;</button>
             </div>
           </div>
@@ -1902,7 +2314,8 @@
         const breakMinutes = parseInt(document.getElementById('pomo-break-mins').value) || 5;
 
         timerManager.startTimer({ mode: selectedMode, topic, activity, focusMinutes, breakMinutes });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
       });
     }
 
@@ -1913,7 +2326,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Stop &amp; Log Study Session</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="text-center py-3 bg-[#18181B] text-white rounded-lg font-mono">
               <div class="text-[10px] uppercase text-[#E2EFE7] font-bold">Logged Duration</div>
@@ -1924,7 +2337,7 @@
               <textarea id="stop-timer-notes" rows="3" class="w-full border border-[#E4E7E1] rounded-lg p-2" placeholder="What did you accomplish?"></textarea>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-confirm-stop-timer" class="btn-primary">Save Session</button>
             </div>
           </div>
@@ -1934,59 +2347,8 @@
       document.getElementById('btn-confirm-stop-timer')?.addEventListener('click', () => {
         const notes = document.getElementById('stop-timer-notes').value;
         timerManager.stopTimer(notes);
-        document.getElementById('modal-container').remove();
-        this.render();
-      });
-    }
-
-    openManualSessionModal() {
-      const cur = store.getActiveCurriculum();
-      const modalHtml = `
-        <div id="modal-container" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 text-xs">
-          <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
-              <h3 class="font-bold text-sm text-[#18181B]">Log Manual Study Session</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
-            </div>
-            <div class="space-y-3">
-              <div>
-                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Topic</label>
-                <select id="man-topic-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
-                  ${cur.topics.map(t => `<option value="${t.name}">${t.name}</option>`).join('')}
-                </select>
-              </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Date</label>
-                  <input id="man-date-input" type="date" value="${new Date().toISOString().split('T')[0]}" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
-                </div>
-                <div>
-                  <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Duration (Minutes)</label>
-                  <input id="man-dur-input" type="number" value="60" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono">
-                </div>
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold text-[#71717A] uppercase mb-1">Activity</label>
-                <select id="man-act-select" class="w-full border border-[#E4E7E1] rounded-lg p-2 font-mono bg-[#F7F9F6]">
-                  ${['LES', 'Reading', 'Questions', 'Flashcards', 'Mock', 'Mock Review', 'Revision', 'Formula Review', 'Ethics Practice', 'Other'].map(a => `<option value="${a}">${a}</option>`).join('')}
-                </select>
-              </div>
-            </div>
-            <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
-              <button id="btn-save-manual-session" class="btn-primary">Add to 300h Counter</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHtml);
-      document.getElementById('btn-save-manual-session')?.addEventListener('click', () => {
-        const topic = document.getElementById('man-topic-select').value;
-        const date = document.getElementById('man-date-input').value;
-        const durationMinutes = parseInt(document.getElementById('man-dur-input').value) || 60;
-        const activity = document.getElementById('man-act-select').value;
-        timerManager.logManualSession({ date, durationMinutes, topic, activity });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -1998,7 +2360,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">One-Tap Question Logger</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div>
@@ -2019,7 +2381,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-question-log" class="btn-primary">Save Question Log</button>
             </div>
           </div>
@@ -2040,7 +2402,8 @@
           incorrect: Math.max(0, attempted - correct)
         });
         store.save();
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2052,7 +2415,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Add to Wall of Shame</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div>
@@ -2075,7 +2438,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-mistake" class="btn-primary">Save Mistake</button>
             </div>
           </div>
@@ -2084,14 +2447,15 @@
       document.body.insertAdjacentHTML('beforeend', modalHtml);
       document.getElementById('btn-save-mistake')?.addEventListener('click', () => {
         const title = document.getElementById('m-title').value;
-        if (!title) { alert('Enter title'); return; }
+        if (!title) { if (typeof alert !== 'undefined') alert('Enter title'); return; }
         store.addMistake({
           questionTitle: title,
           topic: document.getElementById('m-topic').value,
           whyWrong: document.getElementById('m-why').value,
           correctConcept: document.getElementById('m-concept').value
         });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2105,7 +2469,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Convert to Flashcard</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div>
@@ -2118,7 +2482,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-fc" class="btn-primary">Add Flashcard</button>
             </div>
           </div>
@@ -2127,7 +2491,8 @@
       document.body.insertAdjacentHTML('beforeend', modalHtml);
       document.getElementById('btn-save-fc')?.addEventListener('click', () => {
         store.convertMistakeToFlashcard(mistakeId, document.getElementById('fc-front').value, document.getElementById('fc-back').value);
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2138,7 +2503,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Log Mock Exam</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div>
@@ -2167,7 +2532,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-mock" class="btn-primary">Save Mock</button>
             </div>
           </div>
@@ -2182,7 +2547,8 @@
           session2Score: document.getElementById('mock-s2').value,
           reviewComplete: document.getElementById('mock-review-done').checked
         });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2194,7 +2560,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Edit Builder Profile &amp; Picture</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div>
@@ -2211,7 +2577,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-profile" class="btn-primary">Save Profile &amp; Picture</button>
             </div>
           </div>
@@ -2225,7 +2591,8 @@
           photo: photo || 'https://ui-avatars.com/api/?name=Ishan+Nagpal&background=18181B&color=E2EFE7&bold=true',
           oneLiner: document.getElementById('prof-one-liner').value
         });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2236,7 +2603,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">Log Study Time</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3">
               <div class="p-2.5 bg-[#F7F9F6] rounded-lg font-semibold text-[#18181B]">${topic} &rarr; ${lesson}</div>
@@ -2246,7 +2613,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-secondary">Cancel</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-secondary">Cancel</button>
               <button id="btn-save-lesson-study" class="btn-primary">Save Study Time</button>
             </div>
           </div>
@@ -2256,7 +2623,8 @@
       document.getElementById('btn-save-lesson-study')?.addEventListener('click', () => {
         const min = parseInt(document.getElementById('l-study-min').value) || 30;
         timerManager.logManualSession({ durationMinutes: min, topic, activity: 'LES', notes: `${lesson} study` });
-        document.getElementById('modal-container').remove();
+        const m = document.getElementById('modal-container');
+        if (m) m.remove();
         this.render();
       });
     }
@@ -2268,7 +2636,7 @@
           <div class="bg-white rounded-xl border border-[#E4E7E1] max-w-xl w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between border-b border-[#E4E7E1] pb-2">
               <h3 class="font-bold text-sm text-[#18181B]">2026 vs 2027 Curriculum Comparison</h3>
-              <button onclick="document.getElementById('modal-container').remove()">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();">&times;</button>
             </div>
             <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
               <div>
@@ -2281,7 +2649,7 @@
               </div>
             </div>
             <div class="flex justify-end border-t border-[#E4E7E1] pt-3">
-              <button onclick="document.getElementById('modal-container').remove()" class="btn-primary">Close</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="btn-primary">Close</button>
             </div>
           </div>
         </div>
@@ -2296,7 +2664,7 @@
             <div class="flex items-center gap-2 border-b border-[#E4E7E1] pb-2">
               <svg class="w-4 h-4 text-[#A1A1AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               <input id="search-input" type="text" placeholder="Search everything (topics, lessons, questions)..." class="w-full text-sm focus:outline-none text-[#18181B]">
-              <button onclick="document.getElementById('modal-container').remove()" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
+              <button onclick="var m = document.getElementById('modal-container'); if(m) m.remove();" class="text-[#A1A1AA] font-bold hover:text-[#18181B]">&times;</button>
             </div>
             <div id="search-results-list" class="max-h-80 overflow-y-auto space-y-2">
               <div class="text-[#A1A1AA] text-center py-4">Type a query to search...</div>
@@ -2346,7 +2714,7 @@
     }
   }
 
-  // --- 5. INITIALIZATION ---
+  // --- 5. GLOBAL INITIALIZATION ---
   function startApp() {
     if (!window.app) {
       window.app = new App();
@@ -2355,9 +2723,11 @@
 
   window.app = new App();
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", startApp);
-  } else {
-    startApp();
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startApp);
+    } else {
+      startApp();
+    }
   }
 })();
