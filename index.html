@@ -267,7 +267,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
   animation: fadeIn 0.15s ease-out;
 }
 
-</style>
+  </style>
 </head>
 <body class="bg-[#F7F9F6] text-[#18181B] min-h-screen antialiased selection:bg-[#E2EFE7] selection:text-[#1C3E2C]">
 
@@ -318,7 +318,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
         </nav>
       </div>
 
-      <!-- Bottom Actions & Clean Footer (No duplicate "Built by" here) -->
+      <!-- Bottom Actions & Clean Footer -->
       <div class="space-y-4 pt-4 border-t border-[#E4E7E1]">
         <button id="btn-sidebar-start-study" class="w-full py-3 bg-[#18181B] hover:bg-[#27272A] text-white font-mono text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-xs">
           <span class="pulse-dot"></span>
@@ -343,7 +343,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
             <span>Taskbar</span>
           </button>
           <div id="header-countdown-badge" class="font-mono text-xs font-semibold text-[#71717A] tracking-wider uppercase">
-            NOV 2026 &bull; 82 DAYS LEFT
+            NOVEMBER 2026 &bull; 82 DAYS LEFT
           </div>
         </div>
 
@@ -356,12 +356,126 @@ body.sidebar-collapsed #btn-expand-sidebar {
         </div>
       </header>
 
-      <!-- Main Content Container -->
+      <!-- Main Content Container with Pre-rendered HTML -->
       <main id="app-main-content" class="p-6 sm:p-8 flex-1 tab-content-fade">
-        <!-- Dynamic view renders here -->
+        <div class="max-w-7xl mx-auto space-y-8 pb-12">
+          <!-- Page Title Block -->
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div class="text-xs font-mono font-semibold text-[#A1A1AA] uppercase tracking-wider">CFA L1</div>
+              <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#18181B] font-sans mt-0.5">YOUR STUDY SPACE</h1>
+              <p class="text-sm text-[#71717A] mt-1 font-sans">A clear view of what matters today.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <select id="attempt-selector" class="bg-white border border-[#E4E7E1] hover:border-[#CBD2C8] rounded-xl px-4 py-2 text-xs font-semibold text-[#18181B] appearance-none pr-8 cursor-pointer shadow-xs focus:outline-none">
+                  <option value="nov_2026" selected>∨ November 2026</option>
+                  <option value="feb_2027">∨ February 2027</option>
+                  <option value="may_2027">∨ May 2027</option>
+                  <option value="aug_2027">∨ August 2027</option>
+                </select>
+              </div>
+
+              <button id="btn-start-study-main" class="btn-primary text-xs py-2 px-4 font-bold flex items-center gap-2" data-action="open-timer">
+                <span>►</span> Start study
+              </button>
+            </div>
+          </div>
+
+          <!-- 6 Metrics Row Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">EXAM</div>
+              <div class="text-base font-bold font-sans text-[#18181B]">November 2026</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">STUDY TIME</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">0h 45m</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">TODAY</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">0h 45m</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">QUESTIONS</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">0</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">MOCK AVG</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">—</div>
+            </div>
+
+            <div class="terminal-card p-4 space-y-1">
+              <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">LESSONS</div>
+              <div class="text-base font-bold font-mono text-[#18181B]">0%</div>
+            </div>
+          </div>
+
+          <!-- Main 2-Column Dashboard Cards -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Column: YOUR PROGRESS -->
+            <div class="lg:col-span-7 terminal-card p-6 flex flex-col justify-between space-y-6">
+              <div class="space-y-4">
+                <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">YOUR PROGRESS</div>
+                <div class="text-3xl sm:text-4xl font-extrabold font-mono text-[#18181B] tracking-tight">
+                  1h <span class="text-lg font-normal text-[#A1A1AA]">/ 300h</span>
+                </div>
+                <div class="progress-bar-track mt-4">
+                  <div class="progress-bar-fill" style="width: 0.3%"></div>
+                </div>
+              </div>
+              <div class="text-xs text-[#71717A] font-sans pt-2">
+                Your own pace, one focused session at a time.
+              </div>
+            </div>
+
+            <!-- Right Column: UP NEXT -->
+            <div class="lg:col-span-5 terminal-card p-6 flex flex-col justify-between space-y-6">
+              <div class="space-y-5">
+                <div class="font-bold text-sm text-[#18181B] tracking-tight font-sans">UP NEXT</div>
+
+                <!-- CONTINUE SECTION -->
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">CONTINUE</div>
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-action="open-timer">
+                    <div class="space-y-0.5 max-w-[240px]">
+                      <div class="font-bold text-xs text-[#18181B] leading-snug">Formatting the Texas Instruments BA II Plus calculator for the CFA exam</div>
+                      <div class="text-[11px] text-[#71717A]">Quantitative Methods</div>
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-white border border-[#E4E7E1] flex items-center justify-center text-xs text-[#18181B] shadow-xs">
+                      ►
+                    </div>
+                  </div>
+                </div>
+
+                <!-- OPTIONAL REVIEW SECTION -->
+                <div class="space-y-2">
+                  <div class="text-[10px] font-mono font-semibold uppercase text-[#A1A1AA] tracking-wider">OPTIONAL REVIEW</div>
+                  <div class="flex items-center justify-between p-3.5 bg-[#F7F9F6] border border-[#E4E7E1] rounded-xl hover:border-[#CBD2C8] transition-colors cursor-pointer" data-tab="practice">
+                    <div class="font-bold text-xs text-[#18181B]">
+                      1 flashcard card due
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-white border border-[#E4E7E1] flex items-center justify-center text-xs text-[#18181B] shadow-xs">
+                      ▱
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-xs text-[#71717A] font-sans pt-2 border-t border-[#F4F4F5]">
+                Small, steady sessions add up.
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
-      <!-- Clean Footer (No duplicate "Built by" here) -->
+      <!-- Clean Footer -->
       <footer class="border-t border-[#E4E7E1] bg-[#F7F9F6] py-6 px-8 text-xs font-sans text-[#A1A1AA] flex flex-col sm:flex-row items-center justify-between gap-2">
         <p>Curriculum structure referenced from Let Me Explain's Level I Learning Module Coverage.</p>
         <p class="font-mono text-[11px] text-[#71717A]">CFA Level I Personal Operating System</p>
@@ -369,10 +483,10 @@ body.sidebar-collapsed #btn-expand-sidebar {
     </div>
   </div>
 
-  <!-- Mobile Bottom Bar with Crisp SVG Icons -->
+  <!-- Mobile Bottom Bar -->
   <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E4E7E1] flex justify-around py-2 z-40 font-mono text-[10px] font-bold text-[#71717A]">
     <button class="flex flex-col items-center py-1" data-tab="control_room">
-      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 001 1m-6 0h6"></path></svg>
       <span>Home</span>
     </button>
     <button class="flex flex-col items-center py-1" data-tab="curriculum">
@@ -393,7 +507,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
     </button>
   </div>
 
-  <!-- Standalone App Script -->
+  <!-- Inline App Script -->
   <script>
 // ==========================================
 // CFA Level I: Braindump Standalone App Bundle v12
@@ -2775,6 +2889,6 @@ body.sidebar-collapsed #btn-expand-sidebar {
   }
 })();
 
-</script>
+  </script>
 </body>
 </html>
