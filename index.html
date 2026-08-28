@@ -517,6 +517,11 @@ body.sidebar-collapsed #btn-expand-sidebar {
 (function() {
   'use strict';
 
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   // --- 1. SEED DATA ---
   const EXAM_ATTEMPTS = [
     {
@@ -1237,7 +1242,7 @@ body.sidebar-collapsed #btn-expand-sidebar {
   ];
 
   // --- 2. STORE ---
-  const STORAGE_KEY = 'cfa_l1_braindump_state_v17';
+  const STORAGE_KEY = 'cfa_l1_braindump_state_v20';
 
   const safeStorage = {
     getItem(key) {
@@ -1588,52 +1593,32 @@ body.sidebar-collapsed #btn-expand-sidebar {
     }
 
     render() {
-      try {
-        const mainContainer = document.getElementById('app-main-content');
-        if (!mainContainer) return;
+      const mainContainer = document.getElementById('app-main-content');
+      if (!mainContainer) return;
 
-        this.renderHeaderTimerBar();
-        this.renderHeaderCountdown();
+      this.renderHeaderTimerBar();
+      this.renderHeaderCountdown();
 
-        mainContainer.className = 'p-6 sm:p-8 flex-1 tab-content-fade';
+      mainContainer.className = 'p-6 sm:p-8 flex-1 tab-content-fade';
 
-        let htmlContent = '';
-        switch (this.currentTab) {
-          case 'control_room':
-          case 'home':
-            try { htmlContent = this.renderControlRoom(); } catch(e) { console.error('Control room render error:', e); htmlContent = this.renderControlRoom(); }
-            break;
-
-          case 'curriculum':
-            try { htmlContent = this.renderCurriculumLES(); } catch(e) { console.error('Curriculum render error:', e); }
-            break;
-
-          case 'practice':
-            try { htmlContent = this.renderPracticeLab(); } catch(e) { console.error('Practice render error:', e); }
-            break;
-
-          case 'weekly_plan':
-            try { htmlContent = this.renderWeeklyPlanView(); } catch(e) { console.error('Weekly plan render error:', e); }
-            break;
-
-          case 'profile':
-          case 'resources':
-            try { htmlContent = this.renderProfileResourcesView(); } catch(e) { console.error('Profile render error:', e); }
-            break;
-
-          default:
-            htmlContent = this.renderControlRoom();
-        }
-
-        if (htmlContent) {
-          mainContainer.innerHTML = htmlContent;
-        }
-
-        this.updateActiveTabStyles();
-        this.attachTabEventListeners();
-      } catch (err) {
-        console.error('Render error caught cleanly:', err);
+      let htmlContent = '';
+      if (this.currentTab === 'control_room' || this.currentTab === 'home') {
+        htmlContent = this.renderControlRoom();
+      } else if (this.currentTab === 'curriculum') {
+        htmlContent = this.renderCurriculumLES();
+      } else if (this.currentTab === 'practice') {
+        htmlContent = this.renderPracticeLab();
+      } else if (this.currentTab === 'weekly_plan') {
+        htmlContent = this.renderWeeklyPlanView();
+      } else if (this.currentTab === 'profile' || this.currentTab === 'resources') {
+        htmlContent = this.renderProfileResourcesView();
+      } else {
+        htmlContent = this.renderControlRoom();
       }
+
+      mainContainer.innerHTML = htmlContent;
+      this.updateActiveTabStyles();
+      this.attachTabEventListeners();
     }
 
     renderHeaderCountdown() {
